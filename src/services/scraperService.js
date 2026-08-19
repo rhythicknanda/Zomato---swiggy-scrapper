@@ -57,34 +57,38 @@ export const openPlatformAppOrWeb = (platform, item) => {
 };
 
 /**
- * Calculates Swiggy vs Zomato vs Ownly prices for a list of items
+ * Calculates Swiggy vs Zomato vs Ownly checkout prices and distance from selected locality
  */
 const calculatePricing = (rawList, selectedLocality, isGoldMember) => {
   return rawList.map(item => {
-    const baseP = item.basePrice;
-    const distanceKm = parseFloat(item.distanceKm) || 2.0;
+    // Calculate distance relative to selected locality
+    const isSameLocality = item.locality.toLowerCase().includes(selectedLocality.name.toLowerCase());
+    const effectiveDistance = isSameLocality
+      ? item.distanceKm
+      : (parseFloat(item.distanceKm) + selectedLocality.distanceOffset).toFixed(1);
 
+    const distanceNum = parseFloat(effectiveDistance);
     const platformFee = 6;
-    const rawDeliveryFee = Math.round(25 + distanceKm * 7);
+    const rawDeliveryFee = Math.round(25 + distanceNum * 7);
 
     // Swiggy
-    const swiggyBase = baseP;
+    const swiggyBase = item.basePrice;
     const swiggyPackaging = 25;
-    let swiggyDelivery = isGoldMember && baseP > 199 ? 0 : rawDeliveryFee;
-    let swiggyDiscount = baseP > 300 ? 60 : 30;
+    let swiggyDelivery = isGoldMember && swiggyBase > 199 ? 0 : rawDeliveryFee;
+    let swiggyDiscount = swiggyBase > 300 ? 60 : 30;
     if (isGoldMember) swiggyDiscount += 20;
     const swiggyFinal = swiggyBase + swiggyPackaging + swiggyDelivery + platformFee - swiggyDiscount;
 
     // Zomato
-    const zomatoBase = Math.round(baseP * 0.98);
+    const zomatoBase = Math.round(swiggyBase * 0.98);
     const zomatoPackaging = 20;
-    let zomatoDelivery = isGoldMember && baseP > 199 ? 0 : rawDeliveryFee;
-    let zomatoDiscount = baseP > 300 ? 70 : 40;
+    let zomatoDelivery = isGoldMember && zomatoBase > 199 ? 0 : rawDeliveryFee;
+    let zomatoDiscount = zomatoBase > 300 ? 70 : 40;
     if (isGoldMember) zomatoDiscount += 25;
     const zomatoFinal = zomatoBase + zomatoPackaging + zomatoDelivery + platformFee - zomatoDiscount;
 
     // Ownly Direct
-    const ownlyBase = Math.round(baseP * 0.88);
+    const ownlyBase = Math.round(swiggyBase * 0.88);
     const ownlyPackaging = 15;
     const ownlyDelivery = Math.round(rawDeliveryFee * 0.65);
     const ownlyDiscount = 35;
@@ -102,7 +106,7 @@ const calculatePricing = (rawList, selectedLocality, isGoldMember) => {
         discount: swiggyDiscount,
         finalPrice: Math.max(40, swiggyFinal),
         couponCode: isGoldMember ? 'SWIGGYONE' : 'SWIGGYIT',
-        deliveryTime: `${Math.round(18 + distanceKm * 3)} mins`
+        deliveryTime: `${Math.round(18 + distanceNum * 3)} mins`
       },
       {
         platform: 'zomato',
@@ -115,7 +119,7 @@ const calculatePricing = (rawList, selectedLocality, isGoldMember) => {
         discount: zomatoDiscount,
         finalPrice: Math.max(40, zomatoFinal),
         couponCode: isGoldMember ? 'ZOMATOGOLD' : 'ZOMATO50',
-        deliveryTime: `${Math.round(20 + distanceKm * 3)} mins`
+        deliveryTime: `${Math.round(20 + distanceNum * 3)} mins`
       },
       {
         platform: 'ownly',
@@ -128,7 +132,7 @@ const calculatePricing = (rawList, selectedLocality, isGoldMember) => {
         discount: ownlyDiscount,
         finalPrice: Math.max(40, ownlyFinal),
         couponCode: 'DIRECTDEAL',
-        deliveryTime: `${Math.round(15 + distanceKm * 2.5)} mins`
+        deliveryTime: `${Math.round(15 + distanceNum * 2.5)} mins`
       }
     ];
 
@@ -140,7 +144,8 @@ const calculatePricing = (rawList, selectedLocality, isGoldMember) => {
 
     return {
       ...item,
-      id: `${item.restaurant.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${item.dishName.toLowerCase().replace(/[^a-z0-9]/g, '-')}`,
+      id: `${item.restaurant.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${item.dishName.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${selectedLocality.id}`,
+      calculatedDistance: distanceNum,
       cityName: "Bengaluru",
       sortedPlatforms: platforms,
       cheapestPlatform: cheapest,
@@ -150,10 +155,7 @@ const calculatePricing = (rawList, selectedLocality, isGoldMember) => {
 };
 
 /**
- * Split Scraper Engine:
- * Returns 2 distinct arrays:
- * 1. nameMatched: Restaurants having the query term in their restaurant name (e.g. "Pizza" in Domino's Pizza, Pizza Hut)
- * 2. menuMatched: Restaurants serving that item in their menu or category
+ * Split Scraper Engine with Strict Distance Sorting
  */
 export const searchAndCompareDishesSplit = ({
   query = 'Pizza',
@@ -162,18 +164,15 @@ export const searchAndCompareDishesSplit = ({
   isVegOnly = false,
   isNonVegOnly = false,
   isGoldMember = true,
-  sortBy = 'cheapest',
   priceRange = 'all'
 }) => {
   const trimmedQuery = query.trim().toLowerCase();
   let db = [...REAL_SWIGGY_ZOMATO_BENGALURU_DB];
 
-  // Apply category filter if not 'All'
   if (category !== 'All') {
     db = db.filter(item => item.category === category);
   }
 
-  // Apply dietary filter
   if (isVegOnly) {
     db = db.filter(item => item.isVeg === true);
   } else if (isNonVegOnly) {
@@ -191,7 +190,7 @@ export const searchAndCompareDishesSplit = ({
     (item.dishName.toLowerCase().includes(trimmedQuery) || item.category.toLowerCase().includes(trimmedQuery))
   );
 
-  // If query doesn't match predefined database, dynamically generate both sections for Bengaluru!
+  // Dynamic fallback for custom query
   if (nameMatched.length === 0 && menuMatched.length === 0 && trimmedQuery) {
     const isNonVeg = trimmedQuery.includes('chicken') || trimmedQuery.includes('mutton') || trimmedQuery.includes('egg');
     const formattedTitle = query.charAt(0).toUpperCase() + query.slice(1);
@@ -208,7 +207,7 @@ export const searchAndCompareDishesSplit = ({
         image: getBestImage(query),
         description: `Authentic ${query} made at ${formattedTitle} Hut in ${selectedLocality.name}.`,
         basePrice: 390,
-        distanceKm: 1.5
+        distanceKm: 0.9
       },
       {
         dishName: `Super ${formattedTitle}`,
@@ -237,7 +236,7 @@ export const searchAndCompareDishesSplit = ({
         image: getBestImage(query),
         description: `Empire's famous signature ${query}.`,
         basePrice: 310,
-        distanceKm: 1.8
+        distanceKm: 1.4
       },
       {
         dishName: `Chef's Choice ${formattedTitle}`,
@@ -250,7 +249,7 @@ export const searchAndCompareDishesSplit = ({
         image: getBestImage(query),
         description: `Top rated ${query} at Truffles Bengaluru.`,
         basePrice: 350,
-        distanceKm: 1.4
+        distanceKm: 1.6
       }
     ];
   }
@@ -258,18 +257,12 @@ export const searchAndCompareDishesSplit = ({
   let processedNameMatched = calculatePricing(nameMatched, selectedLocality, isGoldMember);
   let processedMenuMatched = calculatePricing(menuMatched, selectedLocality, isGoldMember);
 
-  // Apply sorting
-  const applySort = (arr) => {
-    if (sortBy === 'cheapest') return arr.sort((a, b) => a.cheapestPlatform.finalPrice - b.cheapestPlatform.finalPrice);
-    if (sortBy === 'rating') return arr.sort((a, b) => b.rating - a.rating);
-    if (sortBy === 'deliveryTime') return arr.sort((a, b) => parseInt(a.cheapestPlatform.deliveryTime) - parseInt(b.cheapestPlatform.deliveryTime));
-    if (sortBy === 'savings') return arr.sort((a, b) => b.maxSavings - a.maxSavings);
-    return arr;
-  };
+  // STRICTLY SORT BY DISTANCE (Closest to Furthest ascending)
+  const sortByDistance = (arr) => arr.sort((a, b) => a.calculatedDistance - b.calculatedDistance);
 
   return {
-    nameMatched: applySort(processedNameMatched),
-    menuMatched: applySort(processedMenuMatched)
+    nameMatched: sortByDistance(processedNameMatched),
+    menuMatched: sortByDistance(processedMenuMatched)
   };
 };
 

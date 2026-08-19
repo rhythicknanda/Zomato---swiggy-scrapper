@@ -12,12 +12,13 @@ export const ComparisonCard = ({ dish, onSelectDish }) => {
           {dish.isVeg ? 'Veg' : 'Non-Veg'}
         </span>
 
+        {/* Distance Badge */}
         <span
           style={{
             position: 'absolute',
             top: '10px',
             right: '10px',
-            background: 'rgba(11, 15, 23, 0.85)',
+            background: 'rgba(11, 15, 23, 0.88)',
             color: '#ffffff',
             fontSize: '0.72rem',
             padding: '3px 8px',
@@ -25,10 +26,11 @@ export const ComparisonCard = ({ dish, onSelectDish }) => {
             display: 'flex',
             alignItems: 'center',
             gap: '4px',
-            fontWeight: '700'
+            fontWeight: '700',
+            border: '1px solid #334155'
           }}
         >
-          <MapPin size={12} color="#ff8200" /> {dish.locality}, Bengaluru
+          <MapPin size={12} color="#ff8200" /> {dish.calculatedDistance} km ({dish.locality})
         </span>
       </div>
 
