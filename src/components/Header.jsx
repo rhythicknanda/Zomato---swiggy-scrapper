@@ -1,7 +1,8 @@
 import React from 'react';
-import { Utensils, ShieldCheck, Zap } from 'lucide-react';
+import { MapPin, Sparkles } from 'lucide-react';
+import { POPULAR_CITIES } from '../data/dishesData';
 
-export const Header = () => {
+export const Header = ({ selectedCity, setSelectedCity }) => {
   return (
     <header className="site-header">
       <a href="#" className="brand-logo">
@@ -13,9 +14,33 @@ export const Header = () => {
       </a>
 
       <div className="header-badges">
+        {/* City Selector */}
+        <div className="city-selector-wrapper" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(255,255,255,0.06)', padding: '0.4rem 0.85rem', borderRadius: '999px', border: '1px solid rgba(255,255,255,0.12)' }}>
+          <MapPin size={16} color="#fc8019" />
+          <select
+            value={selectedCity}
+            onChange={(e) => setSelectedCity(e.target.value)}
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: '#ffffff',
+              fontSize: '0.85rem',
+              fontWeight: '600',
+              outline: 'none',
+              cursor: 'pointer'
+            }}
+          >
+            {POPULAR_CITIES.map((city) => (
+              <option key={city.id} value={city.name} style={{ background: '#111827', color: '#fff' }}>
+                📍 {city.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
         <div className="live-badge">
           <span className="pulse-dot"></span>
-          <span>100% Free Live Scraper</span>
+          <span>Live Scraper Active</span>
         </div>
       </div>
     </header>

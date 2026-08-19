@@ -1,5 +1,5 @@
 import React from 'react';
-import { Star, ChevronRight, CheckCircle2 } from 'lucide-react';
+import { Star, ChevronRight, MapPin } from 'lucide-react';
 
 export const ComparisonCard = ({ dish, onSelectDish }) => {
   return (
@@ -9,6 +9,25 @@ export const ComparisonCard = ({ dish, onSelectDish }) => {
         <div className="dish-overlay" />
         <span className={`dish-veg-badge ${dish.isVeg ? 'veg' : 'non-veg'}`}>
           {dish.isVeg ? 'Veg' : 'Non-Veg'}
+        </span>
+        <span
+          style={{
+            position: 'absolute',
+            top: '12px',
+            right: '12px',
+            background: 'rgba(0,0,0,0.65)',
+            backdropFilter: 'blur(8px)',
+            color: '#fff',
+            fontSize: '0.72rem',
+            padding: '4px 8px',
+            borderRadius: '6px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px',
+            fontWeight: '600'
+          }}
+        >
+          <MapPin size={12} color="#fc8019" /> {dish.cityName || 'Delhi NCR'}
         </span>
       </div>
 
