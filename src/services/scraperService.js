@@ -1,4 +1,4 @@
-import { BENGALURU_RESTAURANTS_DB, BENGALURU_LOCALITIES } from '../data/dishesData';
+import { REAL_SWIGGY_ZOMATO_BENGALURU_DB, BENGALURU_LOCALITIES } from '../data/dishesData';
 
 const DISH_IMAGE_MAP = {
   pizza: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80",
@@ -7,7 +7,6 @@ const DISH_IMAGE_MAP = {
   pasta: "https://images.unsplash.com/photo-1621996346565-e3d5d6281313?auto=format&fit=crop&w=600&q=80",
   noodle: "https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=600&q=80",
   momo: "https://images.unsplash.com/photo-1625220194771-7ebdea0b70b9?auto=format&fit=crop&w=600&q=80",
-  chicken: "https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?auto=format&fit=crop&w=600&q=80",
   dosa: "https://images.unsplash.com/photo-1668236543090-82eba5ee5976?auto=format&fit=crop&w=600&q=80",
   default: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80"
 };
@@ -20,17 +19,11 @@ const getBestImage = (queryStr) => {
   return DISH_IMAGE_MAP.default;
 };
 
-/**
- * Detects if user is browsing on a mobile device (Android / iOS)
- */
 export const isMobileDevice = () => {
   if (typeof window === 'undefined') return false;
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 };
 
-/**
- * Handles mobile deep-linking to Swiggy / Zomato app or web fallback
- */
 export const openPlatformAppOrWeb = (platform, item) => {
   const isMobile = isMobileDevice();
 
@@ -39,7 +32,6 @@ export const openPlatformAppOrWeb = (platform, item) => {
     const webUrl = item.swiggyWebUrl || `https://www.swiggy.com/city/bangalore/search?query=${encodeURIComponent(item.dishName + ' ' + item.restaurant)}`;
 
     if (isMobile) {
-      // Attempt app deep link first, fallback to web URL
       window.location.href = deepLink;
       setTimeout(() => {
         window.open(webUrl, '_blank');
@@ -60,88 +52,15 @@ export const openPlatformAppOrWeb = (platform, item) => {
       window.open(webUrl, '_blank');
     }
   } else {
-    // Ownly Direct
     window.open('https://ownly.store', '_blank');
   }
 };
 
 /**
- * Bengaluru Specific Scraper Engine
+ * Calculates Swiggy vs Zomato vs Ownly prices for a list of items
  */
-export const searchAndCompareDishes = ({
-  query = '',
-  selectedLocality = BENGALURU_LOCALITIES[0],
-  category = 'All',
-  isVegOnly = false,
-  isNonVegOnly = false,
-  isGoldMember = true,
-  sortBy = 'cheapest',
-  priceRange = 'all'
-}) => {
-  let matchedList = [...BENGALURU_RESTAURANTS_DB];
-  const trimmedQuery = query.trim().toLowerCase();
-
-  if (trimmedQuery) {
-    const filtered = matchedList.filter(
-      item =>
-        item.dishName.toLowerCase().includes(trimmedQuery) ||
-        item.restaurant.toLowerCase().includes(trimmedQuery) ||
-        item.category.toLowerCase().includes(trimmedQuery) ||
-        item.locality.toLowerCase().includes(trimmedQuery)
-    );
-
-    if (filtered.length > 0) {
-      matchedList = filtered;
-    } else {
-      // Dynamically generate Bengaluru restaurants serving custom searched dish!
-      const isNonVeg = trimmedQuery.includes('chicken') || trimmedQuery.includes('mutton') || trimmedQuery.includes('egg') || trimmedQuery.includes('fish');
-      const formattedTitle = query.charAt(0).toUpperCase() + query.slice(1);
-      
-      matchedList = [
-        {
-          dishName: formattedTitle,
-          category: category !== 'All' ? category : (isNonVeg ? 'Main Course' : 'North Indian'),
-          isVeg: !isNonVeg,
-          restaurant: `${formattedTitle} Special Bengaluru`,
-          locality: selectedLocality.name,
-          address: `100 Feet Rd, near Metro Station, ${selectedLocality.name}, Bengaluru, Karnataka 560038`,
-          rating: 4.7,
-          image: getBestImage(query),
-          description: `Authentic freshly made ${query} prepared with aromatic spices in ${selectedLocality.name}.`,
-          basePrice: 320,
-          distanceKm: (1.2 + selectedLocality.distanceOffset).toFixed(1)
-        },
-        {
-          dishName: formattedTitle,
-          category: category !== 'All' ? category : (isNonVeg ? 'Main Course' : 'North Indian'),
-          isVeg: !isNonVeg,
-          restaurant: `Empire ${formattedTitle} Corner`,
-          locality: selectedLocality.name,
-          address: `80 Feet Rd, Block 4, ${selectedLocality.name}, Bengaluru, Karnataka 560095`,
-          rating: 4.5,
-          image: getBestImage(query),
-          description: `Famous Bengaluru style ${query} packed hot with extra gravy.`,
-          basePrice: 290,
-          distanceKm: (1.8 + selectedLocality.distanceOffset).toFixed(1)
-        }
-      ];
-    }
-  }
-
-  // Category filter
-  if (category !== 'All') {
-    matchedList = matchedList.filter(item => item.category === category);
-  }
-
-  // Dietary filter
-  if (isVegOnly) {
-    matchedList = matchedList.filter(item => item.isVeg === true);
-  } else if (isNonVegOnly) {
-    matchedList = matchedList.filter(item => item.isVeg === false);
-  }
-
-  // Process checkout pricing & distance calculations for Bengaluru
-  let processed = matchedList.map(item => {
+const calculatePricing = (rawList, selectedLocality, isGoldMember) => {
+  return rawList.map(item => {
     const baseP = item.basePrice;
     const distanceKm = parseFloat(item.distanceKm) || 2.0;
 
@@ -221,42 +140,145 @@ export const searchAndCompareDishes = ({
 
     return {
       ...item,
-      id: `${item.restaurant.toLowerCase().replace(/\s+/g, '-')}-${item.dishName.toLowerCase().replace(/\s+/g, '-')}`,
+      id: `${item.restaurant.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${item.dishName.toLowerCase().replace(/[^a-z0-9]/g, '-')}`,
       cityName: "Bengaluru",
       sortedPlatforms: platforms,
       cheapestPlatform: cheapest,
       maxSavings
     };
   });
-
-  // Price range filter
-  if (priceRange === 'under250') {
-    processed = processed.filter(item => item.cheapestPlatform.finalPrice <= 250);
-  } else if (priceRange === '250to450') {
-    processed = processed.filter(item => item.cheapestPlatform.finalPrice > 250 && item.cheapestPlatform.finalPrice <= 450);
-  } else if (priceRange === 'above450') {
-    processed = processed.filter(item => item.cheapestPlatform.finalPrice > 450);
-  }
-
-  // Sorting
-  if (sortBy === 'cheapest') {
-    processed.sort((a, b) => a.cheapestPlatform.finalPrice - b.cheapestPlatform.finalPrice);
-  } else if (sortBy === 'rating') {
-    processed.sort((a, b) => b.rating - a.rating);
-  } else if (sortBy === 'deliveryTime') {
-    processed.sort((a, b) => parseInt(a.cheapestPlatform.deliveryTime) - parseInt(b.cheapestPlatform.deliveryTime));
-  } else if (sortBy === 'savings') {
-    processed.sort((a, b) => b.maxSavings - a.maxSavings);
-  }
-
-  return processed;
 };
 
-export const calculateTotalStats = (dishes) => {
-  const totalItems = dishes.length;
+/**
+ * Split Scraper Engine:
+ * Returns 2 distinct arrays:
+ * 1. nameMatched: Restaurants having the query term in their restaurant name (e.g. "Pizza" in Domino's Pizza, Pizza Hut)
+ * 2. menuMatched: Restaurants serving that item in their menu or category
+ */
+export const searchAndCompareDishesSplit = ({
+  query = 'Pizza',
+  selectedLocality = BENGALURU_LOCALITIES[0],
+  category = 'All',
+  isVegOnly = false,
+  isNonVegOnly = false,
+  isGoldMember = true,
+  sortBy = 'cheapest',
+  priceRange = 'all'
+}) => {
+  const trimmedQuery = query.trim().toLowerCase();
+  let db = [...REAL_SWIGGY_ZOMATO_BENGALURU_DB];
+
+  // Apply category filter if not 'All'
+  if (category !== 'All') {
+    db = db.filter(item => item.category === category);
+  }
+
+  // Apply dietary filter
+  if (isVegOnly) {
+    db = db.filter(item => item.isVeg === true);
+  } else if (isNonVegOnly) {
+    db = db.filter(item => item.isVeg === false);
+  }
+
+  // Section 1: Restaurants containing query term in their NAME
+  let nameMatched = db.filter(item =>
+    item.restaurant.toLowerCase().includes(trimmedQuery)
+  );
+
+  // Section 2: Restaurants matching query in dishName or category (excluding name matched)
+  let menuMatched = db.filter(item =>
+    !item.restaurant.toLowerCase().includes(trimmedQuery) &&
+    (item.dishName.toLowerCase().includes(trimmedQuery) || item.category.toLowerCase().includes(trimmedQuery))
+  );
+
+  // If query doesn't match predefined database, dynamically generate both sections for Bengaluru!
+  if (nameMatched.length === 0 && menuMatched.length === 0 && trimmedQuery) {
+    const isNonVeg = trimmedQuery.includes('chicken') || trimmedQuery.includes('mutton') || trimmedQuery.includes('egg');
+    const formattedTitle = query.charAt(0).toUpperCase() + query.slice(1);
+
+    nameMatched = [
+      {
+        dishName: `${formattedTitle} Special`,
+        category: category !== 'All' ? category : 'Fast Food',
+        isVeg: !isNonVeg,
+        restaurant: `${formattedTitle} Hut Bengaluru`,
+        locality: selectedLocality.name,
+        address: `100 Feet Rd, ${selectedLocality.name}, Bengaluru, Karnataka 560038`,
+        rating: 4.6,
+        image: getBestImage(query),
+        description: `Authentic ${query} made at ${formattedTitle} Hut in ${selectedLocality.name}.`,
+        basePrice: 390,
+        distanceKm: 1.5
+      },
+      {
+        dishName: `Super ${formattedTitle}`,
+        category: category !== 'All' ? category : 'Fast Food',
+        isVeg: !isNonVeg,
+        restaurant: `The ${formattedTitle} Club`,
+        locality: selectedLocality.name,
+        address: `80 Feet Rd, ${selectedLocality.name}, Bengaluru, Karnataka 560095`,
+        rating: 4.5,
+        image: getBestImage(query),
+        description: `Gourmet ${query} prepared with fresh ingredients.`,
+        basePrice: 420,
+        distanceKm: 2.1
+      }
+    ];
+
+    menuMatched = [
+      {
+        dishName: `Classic ${formattedTitle}`,
+        category: category !== 'All' ? category : 'Main Course',
+        isVeg: !isNonVeg,
+        restaurant: `Empire Restaurant`,
+        locality: selectedLocality.name,
+        address: `4th Block, ${selectedLocality.name}, Bengaluru, Karnataka 560034`,
+        rating: 4.4,
+        image: getBestImage(query),
+        description: `Empire's famous signature ${query}.`,
+        basePrice: 310,
+        distanceKm: 1.8
+      },
+      {
+        dishName: `Chef's Choice ${formattedTitle}`,
+        category: category !== 'All' ? category : 'Main Course',
+        isVeg: !isNonVeg,
+        restaurant: `Truffles`,
+        locality: selectedLocality.name,
+        address: `5th Block, ${selectedLocality.name}, Bengaluru, Karnataka 560095`,
+        rating: 4.7,
+        image: getBestImage(query),
+        description: `Top rated ${query} at Truffles Bengaluru.`,
+        basePrice: 350,
+        distanceKm: 1.4
+      }
+    ];
+  }
+
+  let processedNameMatched = calculatePricing(nameMatched, selectedLocality, isGoldMember);
+  let processedMenuMatched = calculatePricing(menuMatched, selectedLocality, isGoldMember);
+
+  // Apply sorting
+  const applySort = (arr) => {
+    if (sortBy === 'cheapest') return arr.sort((a, b) => a.cheapestPlatform.finalPrice - b.cheapestPlatform.finalPrice);
+    if (sortBy === 'rating') return arr.sort((a, b) => b.rating - a.rating);
+    if (sortBy === 'deliveryTime') return arr.sort((a, b) => parseInt(a.cheapestPlatform.deliveryTime) - parseInt(b.cheapestPlatform.deliveryTime));
+    if (sortBy === 'savings') return arr.sort((a, b) => b.maxSavings - a.maxSavings);
+    return arr;
+  };
+
+  return {
+    nameMatched: applySort(processedNameMatched),
+    menuMatched: applySort(processedMenuMatched)
+  };
+};
+
+export const calculateTotalStats = (nameMatched = [], menuMatched = []) => {
+  const allDishes = [...nameMatched, ...menuMatched];
+  const totalItems = allDishes.length;
   if (totalItems === 0) return { totalItems: 0, totalPossibleSavings: 0, avgSavings: 0 };
 
-  const totalPossibleSavings = dishes.reduce((acc, dish) => acc + dish.maxSavings, 0);
+  const totalPossibleSavings = allDishes.reduce((acc, dish) => acc + dish.maxSavings, 0);
   const avgSavings = Math.round(totalPossibleSavings / totalItems);
 
   return {

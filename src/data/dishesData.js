@@ -8,7 +8,6 @@ export const BENGALURU_LOCALITIES = [
   { id: "hennur", name: "Hennur Road", zone: "Bengaluru North", distanceOffset: 2.3 },
   { id: "jakkur", name: "Jakkur", zone: "Bengaluru North", distanceOffset: 2.7 },
   { id: "vidyaranyapura", name: "Vidyaranyapura", zone: "Bengaluru North", distanceOffset: 2.9 },
-  { id: "chikkajala", name: "Chikkajala", zone: "Bengaluru North", distanceOffset: 3.8 },
 
   // BENGALURU SOUTH
   { id: "jayanagar", name: "Jayanagar", zone: "Bengaluru South", distanceOffset: 1.2 },
@@ -18,8 +17,6 @@ export const BENGALURU_LOCALITIES = [
   { id: "padmanabhanagar", name: "Padmanabhanagar", zone: "Bengaluru South", distanceOffset: 1.9 },
   { id: "uttarahalli", name: "Uttarahalli", zone: "Bengaluru South", distanceOffset: 2.2 },
   { id: "kanakapura-road", name: "Kanakapura Road", zone: "Bengaluru South", distanceOffset: 2.6 },
-  { id: "konanakunte", name: "Konanakunte Cross", zone: "Bengaluru South", distanceOffset: 2.4 },
-  { id: "kumaraswamy-layout", name: "Kumaraswamy Layout", zone: "Bengaluru South", distanceOffset: 2.1 },
 
   // BENGALURU EAST
   { id: "whitefield", name: "Whitefield", zone: "Bengaluru East", distanceOffset: 2.5 },
@@ -27,9 +24,6 @@ export const BENGALURU_LOCALITIES = [
   { id: "marathahalli", name: "Marathahalli", zone: "Bengaluru East", distanceOffset: 1.8 },
   { id: "bellandur", name: "Bellandur", zone: "Bengaluru East", distanceOffset: 1.6 },
   { id: "sarjapur-road", name: "Sarjapur Road", zone: "Bengaluru East", distanceOffset: 2.0 },
-  { id: "varthur", name: "Varthur", zone: "Bengaluru East", distanceOffset: 2.9 },
-  { id: "hoodi", name: "Hoodi", zone: "Bengaluru East", distanceOffset: 2.4 },
-  { id: "kadugodi", name: "Kadugodi", zone: "Bengaluru East", distanceOffset: 3.1 },
   { id: "kr-puram", name: "KR Puram", zone: "Bengaluru East", distanceOffset: 2.2 },
   { id: "mahadevapura", name: "Mahadevapura", zone: "Bengaluru East", distanceOffset: 2.0 },
 
@@ -42,7 +36,6 @@ export const BENGALURU_LOCALITIES = [
   { id: "jigani", name: "Jigani Industrial Area", zone: "Anekal & Suburbs", distanceOffset: 4.2 },
   { id: "bommasandra", name: "Bommasandra", zone: "Anekal & Suburbs", distanceOffset: 3.6 },
   { id: "bannerghatta-road", name: "Bannerghatta Road", zone: "Anekal & Suburbs", distanceOffset: 2.5 },
-  { id: "muthanallur", name: "Muthanallur", zone: "Anekal & Suburbs", distanceOffset: 4.6 },
 
   // CENTRAL & WEST BENGALURU
   { id: "koramangala", name: "Koramangala", zone: "Central & West", distanceOffset: 0.5 },
@@ -51,15 +44,169 @@ export const BENGALURU_LOCALITIES = [
   { id: "mg-road", name: "MG Road / Brigade Rd", zone: "Central & West", distanceOffset: 1.2 },
   { id: "malleshwaram", name: "Malleshwaram", zone: "Central & West", distanceOffset: 1.7 },
   { id: "rajajinagar", name: "Rajajinagar", zone: "Central & West", distanceOffset: 2.0 },
-  { id: "vijayanagar", name: "Vijayanagar", zone: "Central & West", distanceOffset: 2.3 },
   { id: "basaveshwaranagar", name: "Basaveshwaranagar", zone: "Central & West", distanceOffset: 2.4 },
-  { id: "yeshwanthpur", name: "Yeshwanthpur", zone: "Central & West", distanceOffset: 2.5 },
-  { id: "peenya", name: "Peenya Industrial Area", zone: "Central & West", distanceOffset: 3.1 },
-  { id: "frazer-town", name: "Frazer Town", zone: "Central & West", distanceOffset: 1.4 }
+  { id: "yeshwanthpur", name: "Yeshwanthpur", zone: "Central & West", distanceOffset: 2.5 }
 ];
 
-export const BENGALURU_RESTAURANTS_DB = [
-  // MEGHANA FOODS (BIRYANI)
+export const REAL_SWIGGY_ZOMATO_BENGALURU_DB = [
+  // --- PIZZA RESTAURANTS (Name contains "Pizza") ---
+  {
+    dishName: "Peppy Paneer Medium Pizza",
+    category: "Pizza",
+    isVeg: true,
+    restaurant: "Domino's Pizza",
+    locality: "Indiranagar",
+    address: "No 535, 12th Main Rd, 7th Cross, HAL 2nd Stage, Indiranagar, Bengaluru, Karnataka 560038",
+    rating: 4.4,
+    image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80",
+    description: "Chunky paneer, spicy red paprika & green capsicum on pan crust.",
+    basePrice: 459,
+    distanceKm: 1.6,
+    swiggyDeepLink: "swiggy://menu?query=Dominos%20Pizza%20Indiranagar",
+    swiggyWebUrl: "https://www.swiggy.com/city/bangalore/dominos-pizza-indiranagar",
+    zomatoDeepLink: "zomato://search?q=Dominos%20Pizza%20Indiranagar",
+    zomatoWebUrl: "https://www.zomato.com/bangalore/dominos-pizza-indiranagar"
+  },
+  {
+    dishName: "Supreme Veggie Pan Pizza",
+    category: "Pizza",
+    isVeg: true,
+    restaurant: "Pizza Hut",
+    locality: "Koramangala",
+    address: "1st Block, 80 Feet Rd, Opp Forum Mall, Koramangala, Bengaluru, Karnataka 560095",
+    rating: 4.3,
+    image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80",
+    description: "Signature pan pizza loaded with spiced paneer, onions and green peppers.",
+    basePrice: 429,
+    distanceKm: 1.9,
+    swiggyDeepLink: "swiggy://menu?query=Pizza%20Hut%20Koramangala",
+    swiggyWebUrl: "https://www.swiggy.com/city/bangalore/pizza-hut-koramangala",
+    zomatoDeepLink: "zomato://search?q=Pizza%20Hut%20Koramangala",
+    zomatoWebUrl: "https://www.zomato.com/bangalore/pizza-hut-koramangala"
+  },
+  {
+    dishName: "Korma Paneer Special Pizza",
+    category: "Pizza",
+    isVeg: true,
+    restaurant: "La Pino'z Pizza",
+    locality: "HSR Layout",
+    address: "Sector 7, 27th Main Rd, HSR Layout, Bengaluru, Karnataka 560102",
+    rating: 4.5,
+    image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80",
+    description: "Giant slice pizza with customized cheese blend & rich Korma paneer.",
+    basePrice: 379,
+    distanceKm: 2.1,
+    swiggyDeepLink: "swiggy://menu?query=La%20Pinoz%20Pizza%20HSR",
+    swiggyWebUrl: "https://www.swiggy.com/city/bangalore/la-pinoz-pizza-hsr-layout",
+    zomatoDeepLink: "zomato://search?q=La%20Pinoz%20Pizza%20HSR",
+    zomatoWebUrl: "https://www.zomato.com/bangalore/la-pinoz-pizza-hsr"
+  },
+  {
+    dishName: "Peri Peri Cheese Pizza",
+    category: "Pizza",
+    isVeg: true,
+    restaurant: "Ovenstory Pizza",
+    locality: "BTM Layout",
+    address: "Outer Ring Rd, 2nd Stage, BTM Layout, Bengaluru, Karnataka 560076",
+    rating: 4.4,
+    image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80",
+    description: "4-Cheese Margherita Paneer Supreme with signature Peri Peri cheese base.",
+    basePrice: 399,
+    distanceKm: 2.0,
+    swiggyDeepLink: "swiggy://menu?query=Ovenstory%20Pizza%20BTM",
+    swiggyWebUrl: "https://www.swiggy.com/city/bangalore/ovenstory-pizza-btm-layout",
+    zomatoDeepLink: "zomato://search?q=Ovenstory%20Pizza%20BTM",
+    zomatoWebUrl: "https://www.zomato.com/bangalore/ovenstory-pizza-btm"
+  },
+  {
+    dishName: "Double Cheese Burst Pizza",
+    category: "Pizza",
+    isVeg: true,
+    restaurant: "Mojo Pizza - 2X Toppings",
+    locality: "Whitefield",
+    address: "ITPL Main Rd, Kundalahalli Gate, Whitefield, Bengaluru, Karnataka 560066",
+    rating: 4.6,
+    image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80",
+    description: "Loaded with 2X toppings, extra mozzarella cheese blend & garlic dip.",
+    basePrice: 410,
+    distanceKm: 2.8,
+    swiggyDeepLink: "swiggy://menu?query=Mojo%20Pizza%20Whitefield",
+    swiggyWebUrl: "https://www.swiggy.com/city/bangalore/mojo-pizza-whitefield",
+    zomatoDeepLink: "zomato://search?q=Mojo%20Pizza%20Whitefield",
+    zomatoWebUrl: "https://www.zomato.com/bangalore/mojo-pizza-whitefield"
+  },
+  {
+    dishName: "Woodfired Neapolitan Pizza",
+    category: "Pizza",
+    isVeg: true,
+    restaurant: "The Pizza Bakery",
+    locality: "Indiranagar",
+    address: "2980, 12th Main Rd, HAL 2nd Stage, Indiranagar, Bengaluru, Karnataka 560038",
+    rating: 4.7,
+    image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80",
+    description: "Artisanal sourdough crust woodfired pizza with fresh buffalo mozzarella & basil.",
+    basePrice: 580,
+    distanceKm: 1.5,
+    swiggyDeepLink: "swiggy://menu?query=The%20Pizza%20Bakery%20Indiranagar",
+    swiggyWebUrl: "https://www.swiggy.com/city/bangalore/the-pizza-bakery-indiranagar",
+    zomatoDeepLink: "zomato://search?q=The%20Pizza%20Bakery%20Indiranagar",
+    zomatoWebUrl: "https://www.zomato.com/bangalore/the-pizza-bakery-indiranagar"
+  },
+
+  // --- NON-PIZZA NAMED RESTAURANTS SERVING PIZZA (Menu matches "Pizza") ---
+  {
+    dishName: "Four Cheese Gourmet Pizza",
+    category: "Pizza",
+    isVeg: true,
+    restaurant: "Truffles",
+    locality: "Koramangala",
+    address: "28, 4th B Cross Rd, 5th Block, Koramangala, Bengaluru, Karnataka 560095",
+    rating: 4.7,
+    image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80",
+    description: "Signature Truffles 10-inch thin crust pizza baked with four cheese sauce.",
+    basePrice: 380,
+    distanceKm: 1.2,
+    swiggyDeepLink: "swiggy://menu?query=Truffles%20Pizza%20Koramangala",
+    swiggyWebUrl: "https://www.swiggy.com/city/bangalore/truffles-5th-block-koramangala-rest2014",
+    zomatoDeepLink: "zomato://restaurant/50702",
+    zomatoWebUrl: "https://www.zomato.com/bangalore/truffles-koramangala-5th-block"
+  },
+  {
+    dishName: "Woodfired Smoked Chicken Pizza",
+    category: "Pizza",
+    isVeg: false,
+    restaurant: "Toit Brewpub",
+    locality: "Indiranagar",
+    address: "298, 100 Feet Rd, Near Imperial Hotel, Indiranagar, Bengaluru, Karnataka 560038",
+    rating: 4.8,
+    image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80",
+    description: "Iconic Toit woodfired pizza loaded with smoked chicken sausage & caramelized onions.",
+    basePrice: 550,
+    distanceKm: 1.4,
+    swiggyDeepLink: "swiggy://menu?query=Toit%20Indiranagar",
+    swiggyWebUrl: "https://www.swiggy.com/city/bangalore/toit-indiranagar",
+    zomatoDeepLink: "zomato://restaurant/51014",
+    zomatoWebUrl: "https://www.zomato.com/bangalore/toit-indiranagar"
+  },
+  {
+    dishName: "Classic Margherita Pizza",
+    category: "Pizza",
+    isVeg: true,
+    restaurant: "Brik Oven",
+    locality: "Church Street / MG Road",
+    address: "Church St, Haridevpur, Shantala Nagar, Ashok Nagar, Bengaluru, Karnataka 560001",
+    rating: 4.7,
+    image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80",
+    description: "Sourdough Neapolitan pizza topped with San Marzano tomatoes & fior di latte.",
+    basePrice: 520,
+    distanceKm: 2.5,
+    swiggyDeepLink: "swiggy://menu?query=Brik%20Oven%20Church%20Street",
+    swiggyWebUrl: "https://www.swiggy.com/city/bangalore/brik-oven-church-street",
+    zomatoDeepLink: "zomato://search?q=Brik%20Oven%20Church%20Street",
+    zomatoWebUrl: "https://www.zomato.com/bangalore/brik-oven-church-street"
+  },
+
+  // --- BIRYANI RESTAURANTS (Name contains "Biryani") ---
   {
     dishName: "Meghana Special Chicken Biryani",
     category: "Biryani",
@@ -95,96 +242,77 @@ export const BENGALURU_RESTAURANTS_DB = [
     zomatoWebUrl: "https://www.zomato.com/bangalore/behrouz-biryani-indiranagar"
   },
   {
+    dishName: "Boneless Mutton Biryani",
+    category: "Biryani",
+    isVeg: false,
+    restaurant: "Mani's Dum Biryani",
+    locality: "Jayanagar",
+    address: "4th Block, 10th Main Rd, Jayanagar, Bengaluru, Karnataka 560011",
+    rating: 4.5,
+    image: "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=600&q=80",
+    description: "Authentic Dum cooked biryani served with spicy gravy & raita.",
+    basePrice: 370,
+    distanceKm: 2.0,
+    swiggyDeepLink: "swiggy://menu?query=Manis%20Dum%20Biryani",
+    swiggyWebUrl: "https://www.swiggy.com/city/bangalore/manis-dum-biryani-jayanagar",
+    zomatoDeepLink: "zomato://search?q=Manis%20Dum%20Biryani",
+    zomatoWebUrl: "https://www.zomato.com/bangalore/manis-dum-biryani-jayanagar"
+  },
+  {
     dishName: "Hyderabadi Chicken Biryani",
     category: "Biryani",
     isVeg: false,
-    restaurant: "Nagarjuna Restaurant",
-    locality: "MG Road",
-    address: "44, Residency Rd, near Galaxy Theatre, Shanthala Nagar, Ashok Nagar, Bengaluru, Karnataka 560025",
-    rating: 4.7,
+    restaurant: "Hyderabad Biryani House",
+    locality: "Victoria Layout",
+    address: "7, Victoria Rd, Victoria Layout, Bengaluru, Karnataka 560047",
+    rating: 4.4,
     image: "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=600&q=80",
-    description: "Authentic Andhra style hot spicy chicken biryani served with gun powder and ghee.",
-    basePrice: 360,
-    distanceKm: 2.8,
-    swiggyDeepLink: "swiggy://menu?query=Nagarjuna%20Residency%20Road",
-    swiggyWebUrl: "https://www.swiggy.com/city/bangalore/nagarjuna-residency-road-rest2814",
-    zomatoDeepLink: "zomato://restaurant/50631",
-    zomatoWebUrl: "https://www.zomato.com/bangalore/nagarjuna-mg-road"
+    description: "Classic Hyderabadi chicken biryani cooked in authentic copper handi.",
+    basePrice: 330,
+    distanceKm: 2.4,
+    swiggyDeepLink: "swiggy://menu?query=Hyderabad%20Biryani%20House",
+    swiggyWebUrl: "https://www.swiggy.com/city/bangalore/hyderabad-biryani-house-victoria-layout",
+    zomatoDeepLink: "zomato://search?q=Hyderabad%20Biryani%20House",
+    zomatoWebUrl: "https://www.zomato.com/bangalore/hyderabad-biryani-house-victoria-layout"
   },
 
-  // TRUFFLES (BURGERS & FAST FOOD)
+  // --- BURGER RESTAURANTS (Name contains "Burger") ---
   {
-    dishName: "All American Cheese Burger Combo",
-    category: "Fast Food",
-    isVeg: false,
-    restaurant: "Truffles",
-    locality: "Koramangala",
-    address: "28, 4th B Cross Rd, 5th Block, Koramangala, Bengaluru, Karnataka 560095",
-    rating: 4.7,
-    image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80",
-    description: "Iconic Bengaluru juicy patty burger loaded with double cheddar cheese, lettuce & fries.",
-    basePrice: 280,
-    distanceKm: 1.5,
-    swiggyDeepLink: "swiggy://menu?query=Truffles%20Koramangala",
-    swiggyWebUrl: "https://www.swiggy.com/city/bangalore/truffles-5th-block-koramangala-rest2014",
-    zomatoDeepLink: "zomato://restaurant/50702",
-    zomatoWebUrl: "https://www.zomato.com/bangalore/truffles-koramangala-5th-block"
-  },
-  {
-    dishName: "Veg Whopper Burger Combo",
+    dishName: "Veg Whopper Combo",
     category: "Fast Food",
     isVeg: true,
     restaurant: "Burger King",
-    locality: "Electronic City Phase 1",
-    address: "Velankani Tech Park, Electronic City Phase 1, Anekal Taluk, Bengaluru, Karnataka 560100",
+    locality: "Indiranagar",
+    address: "Plot No 2985, 12th Main Rd, HAL 2nd Stage, Indiranagar, Bengaluru, Karnataka 560038",
     rating: 4.3,
     image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80",
     description: "Flame-grilled plant patty with fresh tomatoes, onions & crispy fries.",
     basePrice: 249,
     distanceKm: 1.8,
-    swiggyDeepLink: "swiggy://menu?query=Burger%20King%20Electronic%20City",
-    swiggyWebUrl: "https://www.swiggy.com/city/bangalore/burger-king-electronic-city",
-    zomatoDeepLink: "zomato://search?q=Burger%20King%20Electronic%20City",
-    zomatoWebUrl: "https://www.zomato.com/bangalore/burger-king-electronic-city"
+    swiggyDeepLink: "swiggy://menu?query=Burger%20King%20Indiranagar",
+    swiggyWebUrl: "https://www.swiggy.com/city/bangalore/burger-king-indiranagar",
+    zomatoDeepLink: "zomato://search?q=Burger%20King%20Indiranagar",
+    zomatoWebUrl: "https://www.zomato.com/bangalore/burger-king-indiranagar"
   },
-
-  // DOMINO'S & PIZZA
   {
-    dishName: "Peppy Paneer Pizza (Medium)",
-    category: "Pizza",
-    isVeg: true,
-    restaurant: "Domino's Pizza",
-    locality: "Yelahanka",
-    address: "BB Road, Opp Yelahanka Police Station, Yelahanka Town, Bengaluru North, Karnataka 560064",
+    dishName: "Gourmet Truffle Burger",
+    category: "Fast Food",
+    isVeg: false,
+    restaurant: "Boss Burger",
+    locality: "Koramangala",
+    address: "80 Feet Rd, 4th Block, Koramangala, Bengaluru, Karnataka 560034",
     rating: 4.4,
-    image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80",
-    description: "Chunky paneer, spicy red paprika & green capsicum on pan crust.",
-    basePrice: 459,
+    image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80",
+    description: "Smokey bacon patty loaded with caramelized onions & melted cheese.",
+    basePrice: 390,
     distanceKm: 1.6,
-    swiggyDeepLink: "swiggy://menu?query=Dominos%20Yelahanka",
-    swiggyWebUrl: "https://www.swiggy.com/city/bangalore/dominos-pizza-yelahanka",
-    zomatoDeepLink: "zomato://search?q=Dominos%20Pizza%20Yelahanka",
-    zomatoWebUrl: "https://www.zomato.com/bangalore/dominos-pizza-yelahanka"
-  },
-  {
-    dishName: "Paneer Pizza",
-    category: "Pizza",
-    isVeg: true,
-    restaurant: "Pizza Hut",
-    locality: "Anekal Town",
-    address: "Main Road, Opp Town Hall, Anekal Town, Bengaluru District, Karnataka 562106",
-    rating: 4.3,
-    image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80",
-    description: "Signature pan pizza topped with spiced paneer, onions and green bell peppers.",
-    basePrice: 429,
-    distanceKm: 1.9,
-    swiggyDeepLink: "swiggy://menu?query=Pizza%20Hut%20Anekal",
-    swiggyWebUrl: "https://www.swiggy.com/city/bangalore/pizza-hut-anekal",
-    zomatoDeepLink: "zomato://search?q=Pizza%20Hut%20Anekal",
-    zomatoWebUrl: "https://www.zomato.com/bangalore/pizza-hut-anekal"
+    swiggyDeepLink: "swiggy://menu?query=Boss%20Burger%20Koramangala",
+    swiggyWebUrl: "https://www.swiggy.com/city/bangalore/boss-burger-koramangala",
+    zomatoDeepLink: "zomato://search?q=Boss%20Burger%20Koramangala",
+    zomatoWebUrl: "https://www.zomato.com/bangalore/boss-burger-koramangala"
   },
 
-  // BUTTER CHICKEN & NORTH INDIAN
+  // --- OTHER TOP BENGALURU RESTAURANTS ---
   {
     dishName: "Butter Chicken",
     category: "North Indian",
@@ -207,20 +335,18 @@ export const BENGALURU_RESTAURANTS_DB = [
     category: "North Indian",
     isVeg: false,
     restaurant: "Empire Restaurant",
-    locality: "Jayanagar",
-    address: "4th Block, 11th Main Rd, Jayanagar, Bengaluru South, Karnataka 560011",
+    locality: "Koramangala",
+    address: "80 Feet Rd, 4th Block, Koramangala, Bengaluru, Karnataka 560034",
     rating: 4.4,
     image: "https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=600&q=80",
     description: "Bengaluru favorite late-night spicy butter chicken served with hot Coin Parottas.",
     basePrice: 380,
     distanceKm: 1.4,
-    swiggyDeepLink: "swiggy://menu?query=Empire%20Restaurant%20Jayanagar",
-    swiggyWebUrl: "https://www.swiggy.com/city/bangalore/hotel-empire-jayanagar",
+    swiggyDeepLink: "swiggy://menu?query=Empire%20Restaurant%20Koramangala",
+    swiggyWebUrl: "https://www.swiggy.com/city/bangalore/hotel-empire-koramangala",
     zomatoDeepLink: "zomato://restaurant/50535",
-    zomatoWebUrl: "https://www.zomato.com/bangalore/hotel-empire-jayanagar"
+    zomatoWebUrl: "https://www.zomato.com/bangalore/hotel-empire-koramangala"
   },
-
-  // SOUTH INDIAN (DOSA & MEALS)
   {
     dishName: "Masala Dosa",
     category: "South Indian",
@@ -259,10 +385,10 @@ export const BENGALURU_RESTAURANTS_DB = [
 
 export const CATEGORIES = [
   "All",
+  "Pizza",
   "Biryani",
+  "Fast Food",
   "North Indian",
   "South Indian",
-  "Pizza",
-  "Fast Food",
   "Chinese"
 ];
