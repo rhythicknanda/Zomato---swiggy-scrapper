@@ -5,27 +5,32 @@ import { SavingsSummary } from './components/SavingsSummary';
 import { ComparisonCard } from './components/ComparisonCard';
 import { DishDetailModal } from './components/DishDetailModal';
 import { searchAndCompareDishes, calculateTotalStats } from './services/scraperService';
-import { UtensilsCrossed, RefreshCw, CheckCircle2, ShieldCheck, MapPin } from 'lucide-react';
+import { UtensilsCrossed, RefreshCw, Sparkles, Building2 } from 'lucide-react';
 
 export default function App() {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState('Butter Chicken');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedCity, setSelectedCity] = useState('Delhi NCR');
   const [selectedDish, setSelectedDish] = useState(null);
+  const [sortBy, setSortBy] = useState('cheapest');
+  const [priceRange, setPriceRange] = useState('all');
+  const [isVegOnly, setIsVegOnly] = useState(false);
+  const [isNonVegOnly, setIsNonVegOnly] = useState(false);
+  const [isGoldMember, setIsGoldMember] = useState(true);
+
   const [isScraping, setIsScraping] = useState(false);
   const [scrapingStep, setScrapingStep] = useState('');
 
-  // Simulate live scraping visualizer when city or query changes
   const triggerScrapeEffect = () => {
     setIsScraping(true);
-    setScrapingStep(`🔍 Connecting to Swiggy & Zomato APIs in ${selectedCity}...`);
+    setScrapingStep(`🔍 Scraping restaurants in ${selectedCity} serving "${searchQuery || 'Dishes'}"...`);
 
     setTimeout(() => {
-      setScrapingStep(`🍊 Fetching menu items & active coupon codes...`);
+      setScrapingStep(`🍊 Extracting Swiggy & Zomato checkout prices + Packaging & Delivery fees...`);
     }, 400);
 
     setTimeout(() => {
-      setScrapingStep(`⚡ Comparing final checkout prices across platforms...`);
+      setScrapingStep(`⚡ Applying active Gold/One coupons & calculating lowest price deals...`);
     }, 800);
 
     setTimeout(() => {
@@ -38,14 +43,22 @@ export default function App() {
     triggerScrapeEffect();
   };
 
-  // Trigger effect when city changes
   useEffect(() => {
     triggerScrapeEffect();
-  }, [selectedCity]);
+  }, [selectedCity, searchQuery, selectedCategory, sortBy, priceRange, isVegOnly, isNonVegOnly, isGoldMember]);
 
   const dishes = useMemo(() => {
-    return searchAndCompareDishes(searchQuery, selectedCity, selectedCategory);
-  }, [searchQuery, selectedCity, selectedCategory]);
+    return searchAndCompareDishes({
+      query: searchQuery,
+      selectedCityName: selectedCity,
+      category: selectedCategory,
+      isVegOnly,
+      isNonVegOnly,
+      isGoldMember,
+      sortBy,
+      priceRange
+    });
+  }, [searchQuery, selectedCity, selectedCategory, isVegOnly, isNonVegOnly, isGoldMember, sortBy, priceRange]);
 
   const stats = useMemo(() => {
     return calculateTotalStats(dishes);
@@ -53,7 +66,12 @@ export default function App() {
 
   return (
     <div className="app-container">
-      <Header selectedCity={selectedCity} setSelectedCity={setSelectedCity} />
+      <Header
+        selectedCity={selectedCity}
+        setSelectedCity={setSelectedCity}
+        isGoldMember={isGoldMember}
+        setIsGoldMember={setIsGoldMember}
+      />
 
       <SearchBar
         searchQuery={searchQuery}
@@ -62,11 +80,19 @@ export default function App() {
         setSelectedCategory={setSelectedCategory}
         selectedCity={selectedCity}
         setSelectedCity={setSelectedCity}
+        sortBy={sortBy}
+        setSortBy={setSortBy}
+        isVegOnly={isVegOnly}
+        setIsVegOnly={setIsVegOnly}
+        isNonVegOnly={isNonVegOnly}
+        setIsNonVegOnly={setIsNonVegOnly}
+        priceRange={priceRange}
+        setPriceRange={setPriceRange}
         isScraping={isScraping}
         handleSearchSubmit={handleSearchSubmit}
       />
 
-      {/* Live Scraping Progress Banner */}
+      {/* Live Scraping Banner */}
       {isScraping && (
         <div style={{
           background: 'linear-gradient(135deg, rgba(252, 128, 25, 0.15), rgba(226, 55, 68, 0.15))',
@@ -81,11 +107,25 @@ export default function App() {
         }}>
           <RefreshCw className="spin" size={24} color="#fc8019" />
           <div>
-            <div style={{ fontWeight: 700, fontSize: '0.95rem' }}>Scraping Live Prices for {selectedCity}...</div>
+            <div style={{ fontWeight: 700, fontSize: '0.95rem' }}>Scraping Restaurant Listings for {selectedCity}...</div>
             <div style={{ fontSize: '0.85rem', color: '#d1d5db' }}>{scrapingStep}</div>
           </div>
         </div>
       )}
+
+      {/* Results Header Count */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', color: '#9ca3af', fontSize: '0.9rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <Building2 size={16} color="#fc8019" />
+          <span>Showing <strong>{dishes.length}</strong> restaurants in <strong>{selectedCity}</strong> providing <strong>"{searchQuery || 'Dishes'}"</strong></span>
+        </div>
+
+        {isGoldMember && (
+          <span style={{ color: '#f59e0b', fontWeight: 600, fontSize: '0.82rem' }}>
+            👑 Gold/One Discounts Applied
+          </span>
+        )}
+      </div>
 
       <SavingsSummary stats={stats} />
 
@@ -98,8 +138,8 @@ export default function App() {
       ) : (
         <div style={{ textAlign: 'center', padding: '4rem 1rem', color: '#9ca3af' }}>
           <UtensilsCrossed size={48} style={{ marginBottom: '1rem', opacity: 0.5 }} />
-          <h3 style={{ fontSize: '1.4rem', color: '#fff', marginBottom: '0.5rem' }}>No items found for "{searchQuery}"</h3>
-          <p>Try searching for any dish like "Biryani", "KFC", "Sushi", "Paneer", "Pizza", or "Momos".</p>
+          <h3 style={{ fontSize: '1.4rem', color: '#fff', marginBottom: '0.5rem' }}>No restaurants found matching your filters</h3>
+          <p>Try clearing filters or search for another dish like "Butter Chicken", "Biryani", "Pizza", or "Burger".</p>
         </div>
       )}
 
@@ -108,8 +148,8 @@ export default function App() {
       )}
 
       <footer style={{ textAlign: 'center', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '2rem', paddingBottom: '2rem', marginTop: '4rem', color: '#6b7280', fontSize: '0.85rem' }}>
-        <p>BiteSaver — Universal Live Food Price Comparison Engine (Swiggy vs Zomato vs Ownly)</p>
-        <p style={{ marginTop: '0.5rem' }}>📍 Selected City: {selectedCity} • Netlify Ready</p>
+        <p>BiteSaver — Multi-Restaurant Food Price Scraper Engine (Swiggy vs Zomato vs Ownly)</p>
+        <p style={{ marginTop: '0.5rem' }}>📍 Selected City: {selectedCity} • Ready for 1-Click Netlify Hosting</p>
       </footer>
     </div>
   );

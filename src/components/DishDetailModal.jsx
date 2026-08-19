@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, ExternalLink, Tag, Truck, ShoppingBag, Percent } from 'lucide-react';
+import { X, ExternalLink, ShieldCheck, Ticket } from 'lucide-react';
 
 export const DishDetailModal = ({ dish, onClose }) => {
   if (!dish) return null;
@@ -11,13 +11,13 @@ export const DishDetailModal = ({ dish, onClose }) => {
           <X size={20} />
         </button>
 
-        <h2 className="modal-title">{dish.name}</h2>
-        <p style={{ color: '#9ca3af', fontSize: '0.95rem', marginBottom: '1rem' }}>
-          Price breakdown at <strong>{dish.restaurant}</strong>
+        <h2 className="modal-title">{dish.restaurant}</h2>
+        <p style={{ color: '#34d399', fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.5rem' }}>
+          {dish.dishName}
         </p>
 
-        <p style={{ fontSize: '0.9rem', color: '#d1d5db', marginBottom: '1.5rem', lineHeight: '1.5' }}>
-          {dish.description}
+        <p style={{ fontSize: '0.88rem', color: '#9ca3af', marginBottom: '1.5rem' }}>
+          📍 Location: <strong>{dish.locality}, {dish.cityName}</strong> ({dish.distanceKm} km)
         </p>
 
         <div style={{ overflowX: 'auto' }}>
@@ -28,8 +28,9 @@ export const DishDetailModal = ({ dish, onClose }) => {
                 <th>Base Item</th>
                 <th>Packaging</th>
                 <th>Delivery</th>
-                <th>Coupon</th>
-                <th>Final Total</th>
+                <th>Platform Fee</th>
+                <th>Coupon Code</th>
+                <th>Net Total</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -37,10 +38,10 @@ export const DishDetailModal = ({ dish, onClose }) => {
               {dish.sortedPlatforms.map((p, idx) => {
                 const isCheapest = idx === 0;
                 return (
-                  <tr key={p.platform} style={isCheapest ? { backgroundColor: 'rgba(16, 185, 129, 0.1)' } : {}}>
+                  <tr key={p.platform} style={isCheapest ? { backgroundColor: 'rgba(16, 185, 129, 0.12)', borderLeft: '4px solid #10b981' } : {}}>
                     <td style={{ fontWeight: 700 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span className={`platform-logo ${p.bgClass}`} style={{ width: '20px', height: '20px', fontSize: '0.7rem' }}>
+                        <span className={`platform-logo ${p.bgClass}`} style={{ width: '22px', height: '22px', fontSize: '0.75rem' }}>
                           {p.name[0]}
                         </span>
                         {p.name}
@@ -48,11 +49,14 @@ export const DishDetailModal = ({ dish, onClose }) => {
                     </td>
                     <td>₹{p.basePrice}</td>
                     <td>+₹{p.packagingFee}</td>
-                    <td>+₹{p.deliveryFee}</td>
+                    <td>{p.deliveryFee === 0 ? <span style={{ color: '#34d399', fontWeight: 700 }}>FREE</span> : `+₹${p.deliveryFee}`}</td>
+                    <td>+₹{p.platformFee}</td>
                     <td style={{ color: '#34d399', fontWeight: 600 }}>
-                      {p.discount > 0 ? `-₹${p.discount}` : '₹0'}
+                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: 'rgba(16,185,129,0.15)', padding: '2px 6px', borderRadius: '4px', fontSize: '0.78rem' }}>
+                        <Ticket size={12} /> {p.couponCode} (-₹{p.discount})
+                      </div>
                     </td>
-                    <td style={{ fontSize: '1.1rem', fontWeight: 800, color: isCheapest ? '#34d399' : '#fff' }}>
+                    <td style={{ fontSize: '1.15rem', fontWeight: 800, color: isCheapest ? '#34d399' : '#fff' }}>
                       ₹{p.finalPrice}
                     </td>
                     <td>
@@ -75,8 +79,11 @@ export const DishDetailModal = ({ dish, onClose }) => {
           </table>
         </div>
 
-        <div style={{ marginTop: '1.5rem', background: 'rgba(255,255,255,0.03)', padding: '1rem', borderRadius: '12px', fontSize: '0.85rem', color: '#9ca3af' }}>
-          💡 <strong>Pro Tip:</strong> Swiggy and Zomato prices can vary depending on your location, surge delivery charges, and active Gold/One memberships.
+        <div style={{ marginTop: '1.5rem', background: 'rgba(255,255,255,0.03)', padding: '1rem', borderRadius: '12px', fontSize: '0.85rem', color: '#9ca3af', display: 'flex', gap: '8px', alignItems: 'center' }}>
+          <ShieldCheck size={20} color="#10b981" />
+          <span>
+            <strong>Best Price Guarantee:</strong> Ordering <strong>{dish.dishName}</strong> via <strong>{dish.cheapestPlatform.name}</strong> saves you up to <strong>₹{dish.maxSavings}</strong> compared to other apps!
+          </span>
         </div>
       </div>
     </div>

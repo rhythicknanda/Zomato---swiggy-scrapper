@@ -1,6 +1,5 @@
-import { INITIAL_DISHES, POPULAR_CITIES } from '../data/dishesData';
+import { COMPREHENSIVE_RESTAURANTS_DB, POPULAR_CITIES } from '../data/dishesData';
 
-// Image gallery for dynamically searched dishes
 const DISH_IMAGE_MAP = {
   pizza: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80",
   biryani: "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=600&q=80",
@@ -25,72 +24,138 @@ const getBestImage = (queryStr) => {
 
 /**
  * Universal Scraper & Comparison Engine
- * Dynamically scrapes & compares ANY dish or restaurant in the specified city across Swiggy, Zomato & Ownly.
+ * Returns all restaurants in the city serving the searched dish or matching the filter options.
  */
-export const searchAndCompareDishes = (query = '', selectedCityName = 'Delhi NCR', category = 'All') => {
+export const searchAndCompareDishes = ({
+  query = '',
+  selectedCityName = 'Delhi NCR',
+  category = 'All',
+  isVegOnly = false,
+  isNonVegOnly = false,
+  isGoldMember = true,
+  sortBy = 'cheapest', // cheapest, rating, deliveryTime, savings
+  priceRange = 'all' // all, under250, 250to450, above450
+}) => {
   const city = POPULAR_CITIES.find(c => c.name === selectedCityName) || POPULAR_CITIES[0];
   const multiplier = city.deliveryMultiplier;
 
-  let baseList = [...INITIAL_DISHES];
-
-  // If user searched for a custom dish/restaurant not in initial database, generate dynamic scraped result!
+  let matchedList = [...COMPREHENSIVE_RESTAURANTS_DB];
   const trimmedQuery = query.trim().toLowerCase();
-  
+
   if (trimmedQuery) {
-    const matched = baseList.filter(
-      d => d.name.toLowerCase().includes(trimmedQuery) || d.restaurant.toLowerCase().includes(trimmedQuery)
+    // Check if matching predefined dish or restaurant
+    const filtered = matchedList.filter(
+      item =>
+        item.dishName.toLowerCase().includes(trimmedQuery) ||
+        item.restaurant.toLowerCase().includes(trimmedQuery) ||
+        item.category.toLowerCase().includes(trimmedQuery)
     );
 
-    if (matched.length === 0) {
-      // Synthesize a live scraped entry for the exact dish/restaurant queried
-      const isNonVeg = trimmedQuery.includes('chicken') || trimmedQuery.includes('mutton') || trimmedQuery.includes('egg') || trimmedQuery.includes('fish');
+    if (filtered.length > 0) {
+      matchedList = filtered;
+    } else {
+      // Generate 5 dynamic restaurants in this city serving this custom searched dish!
+      const isNonVeg = trimmedQuery.includes('chicken') || trimmedQuery.includes('mutton') || trimmedQuery.includes('egg') || trimmedQuery.includes('fish') || trimmedQuery.includes('meat');
       const formattedTitle = query.charAt(0).toUpperCase() + query.slice(1);
       
-      const dynamicDish = {
-        id: `custom-${Date.now()}`,
-        name: formattedTitle.includes('Special') ? formattedTitle : `Special ${formattedTitle}`,
-        category: category !== 'All' ? category : (isNonVeg ? 'Main Course' : 'North Indian'),
-        isVeg: !isNonVeg,
-        restaurant: `${formattedTitle} Express (${city.name})`,
-        rating: 4.4,
-        image: getBestImage(query),
-        description: `Freshly prepared ${query} cooked with premium ingredients, served hot in ${city.name}.`,
-        basePrice: 260
-      };
+      const dynamicRestaurants = [
+        {
+          dishName: formattedTitle,
+          category: category !== 'All' ? category : (isNonVeg ? 'Main Course' : 'North Indian'),
+          isVeg: !isNonVeg,
+          restaurant: `${formattedTitle} Imperial`,
+          locality: city.localities[0] || 'Central Area',
+          rating: 4.7,
+          image: getBestImage(query),
+          description: `Signature authentic ${query} cooked with exotic spices & fresh ingredients.`,
+          basePrice: 380,
+          distanceKm: 2.5
+        },
+        {
+          dishName: formattedTitle,
+          category: category !== 'All' ? category : (isNonVeg ? 'Main Course' : 'North Indian'),
+          isVeg: !isNonVeg,
+          restaurant: `Royal ${formattedTitle} Kitchen`,
+          locality: city.localities[1] || 'Main Hub',
+          rating: 4.5,
+          image: getBestImage(query),
+          description: `Traditional style slow-cooked ${query} served hot with side dips.`,
+          basePrice: 320,
+          distanceKm: 3.8
+        },
+        {
+          dishName: formattedTitle,
+          category: category !== 'All' ? category : (isNonVeg ? 'Main Course' : 'North Indian'),
+          isVeg: !isNonVeg,
+          restaurant: `The ${formattedTitle} Co.`,
+          locality: city.localities[2] || 'High Street',
+          rating: 4.3,
+          image: getBestImage(query),
+          description: `Modern fusion ${query} crafted by top culinary chefs.`,
+          basePrice: 420,
+          distanceKm: 1.9
+        },
+        {
+          dishName: formattedTitle,
+          category: category !== 'All' ? category : (isNonVeg ? 'Main Course' : 'North Indian'),
+          isVeg: !isNonVeg,
+          restaurant: `Express ${formattedTitle} Corner`,
+          locality: city.localities[3] || 'Market Place',
+          rating: 4.2,
+          image: getBestImage(query),
+          description: `Budget friendly delicious ${query} delivered extra fast.`,
+          basePrice: 240,
+          distanceKm: 4.2
+        }
+      ];
 
-      baseList = [dynamicDish, ...baseList];
-    } else {
-      baseList = matched;
+      matchedList = dynamicRestaurants;
     }
   }
 
+  // Filter by Category
   if (category !== 'All') {
-    baseList = baseList.filter(d => d.category === category);
+    matchedList = matchedList.filter(item => item.category === category);
   }
 
-  // Calculate dynamic multi-platform pricing for each dish
-  return baseList.map((dish, index) => {
-    const baseP = dish.basePrice || 250;
-    
-    // Swiggy calculation
+  // Filter Veg / Non-Veg
+  if (isVegOnly) {
+    matchedList = matchedList.filter(item => item.isVeg === true);
+  } else if (isNonVegOnly) {
+    matchedList = matchedList.filter(item => item.isVeg === false);
+  }
+
+  // Calculate detailed multi-platform checkout prices
+  let processed = matchedList.map(item => {
+    const baseP = item.basePrice;
+
+    // Platform convenience fee (Swiggy ₹6, Zomato ₹6)
+    const platformFee = 6;
+
+    // Distance based delivery fee
+    const rawDeliveryFee = Math.round((25 + item.distanceKm * 6) * multiplier);
+
+    // Swiggy Pricing
     const swiggyBase = baseP;
-    const swiggyPackaging = Math.round(20 * multiplier);
-    const swiggyDelivery = Math.round(35 * multiplier);
-    const swiggyDiscount = baseP > 300 ? 50 : 30;
-    const swiggyFinal = swiggyBase + swiggyPackaging + swiggyDelivery - swiggyDiscount;
+    const swiggyPackaging = Math.round(25 * multiplier);
+    let swiggyDelivery = isGoldMember && baseP > 199 ? 0 : rawDeliveryFee;
+    let swiggyDiscount = baseP > 350 ? 60 : 30;
+    if (isGoldMember) swiggyDiscount += 20; // Extra Gold discount
+    const swiggyFinal = swiggyBase + swiggyPackaging + swiggyDelivery + platformFee - swiggyDiscount;
 
-    // Zomato calculation
-    const zomatoBase = Math.round(baseP * 1.05); // Zomato base item slightly higher or lower
-    const zomatoPackaging = Math.round(25 * multiplier);
-    const zomatoDelivery = Math.round(40 * multiplier);
-    const zomatoDiscount = baseP > 250 ? 60 : 20;
-    const zomatoFinal = zomatoBase + zomatoPackaging + zomatoDelivery - zomatoDiscount;
+    // Zomato Pricing
+    const zomatoBase = Math.round(baseP * 0.98); // Zomato base competition pricing
+    const zomatoPackaging = Math.round(20 * multiplier);
+    let zomatoDelivery = isGoldMember && baseP > 199 ? 0 : rawDeliveryFee;
+    let zomatoDiscount = baseP > 300 ? 70 : 40;
+    if (isGoldMember) zomatoDiscount += 25; // Extra Zomato Gold discount
+    const zomatoFinal = zomatoBase + zomatoPackaging + zomatoDelivery + platformFee - zomatoDiscount;
 
-    // Ownly Direct calculation (no middleman commission, cheaper delivery)
-    const ownlyBase = Math.round(baseP * 0.9);
+    // Ownly / Direct Restaurant Pricing (No platform commission, zero convenience fee!)
+    const ownlyBase = Math.round(baseP * 0.88); // 12% lower base price (direct)
     const ownlyPackaging = 15;
-    const ownlyDelivery = Math.round(20 * multiplier);
-    const ownlyDiscount = 25;
+    const ownlyDelivery = Math.round(rawDeliveryFee * 0.7); // Direct delivery cheaper
+    const ownlyDiscount = 35;
     const ownlyFinal = ownlyBase + ownlyPackaging + ownlyDelivery - ownlyDiscount;
 
     const platforms = [
@@ -101,11 +166,12 @@ export const searchAndCompareDishes = (query = '', selectedCityName = 'Delhi NCR
         basePrice: swiggyBase,
         packagingFee: swiggyPackaging,
         deliveryFee: swiggyDelivery,
+        platformFee: platformFee,
         discount: swiggyDiscount,
-        finalPrice: swiggyFinal,
-        couponCode: 'SWIGGYIT',
-        deliveryTime: `${Math.round(25 * multiplier)} mins`,
-        url: `https://www.swiggy.com/search?query=${encodeURIComponent(dish.name)}`
+        finalPrice: Math.max(50, swiggyFinal),
+        couponCode: isGoldMember ? 'SWIGGYONE' : 'SWIGGYIT',
+        deliveryTime: `${Math.round(20 + item.distanceKm * 3)} mins`,
+        url: `https://www.swiggy.com/search?query=${encodeURIComponent(item.dishName + ' ' + item.restaurant)}`
       },
       {
         platform: 'zomato',
@@ -114,42 +180,67 @@ export const searchAndCompareDishes = (query = '', selectedCityName = 'Delhi NCR
         basePrice: zomatoBase,
         packagingFee: zomatoPackaging,
         deliveryFee: zomatoDelivery,
+        platformFee: platformFee,
         discount: zomatoDiscount,
-        finalPrice: zomatoFinal,
-        couponCode: 'ZOMATO50',
-        deliveryTime: `${Math.round(30 * multiplier)} mins`,
-        url: `https://www.zomato.com/search?q=${encodeURIComponent(dish.name)}`
+        finalPrice: Math.max(50, zomatoFinal),
+        couponCode: isGoldMember ? 'ZOMATOGOLD' : 'ZOMATO50',
+        deliveryTime: `${Math.round(22 + item.distanceKm * 3)} mins`,
+        url: `https://www.zomato.com/search?q=${encodeURIComponent(item.dishName + ' ' + item.restaurant)}`
       },
       {
         platform: 'ownly',
-        name: 'Ownly',
+        name: 'Ownly Direct',
         bgClass: 'ownly-bg',
         basePrice: ownlyBase,
         packagingFee: ownlyPackaging,
         deliveryFee: ownlyDelivery,
+        platformFee: 0,
         discount: ownlyDiscount,
-        finalPrice: ownlyFinal,
-        couponCode: 'DIRECTSAVE',
-        deliveryTime: `${Math.round(20 * multiplier)} mins`,
+        finalPrice: Math.max(50, ownlyFinal),
+        couponCode: 'DIRECTDEAL',
+        deliveryTime: `${Math.round(18 + item.distanceKm * 2.5)} mins`,
         url: `https://ownly.store`
       }
     ];
 
-    // Sort by cheapest final checkout price
+    // Sort platforms by final checkout price ascending
     platforms.sort((a, b) => a.finalPrice - b.finalPrice);
 
     const cheapest = platforms[0];
-    const mostExpensive = platforms[platforms.length - 1];
-    const maxSavings = mostExpensive.finalPrice - cheapest.finalPrice;
+    const expensive = platforms[platforms.length - 1];
+    const maxSavings = expensive.finalPrice - cheapest.finalPrice;
 
     return {
-      ...dish,
+      ...item,
+      id: `${item.restaurant.toLowerCase().replace(/\s+/g, '-')}-${item.dishName.toLowerCase().replace(/\s+/g, '-')}`,
       cityName: city.name,
       sortedPlatforms: platforms,
       cheapestPlatform: cheapest,
       maxSavings
     };
   });
+
+  // Price range filter
+  if (priceRange === 'under250') {
+    processed = processed.filter(item => item.cheapestPlatform.finalPrice <= 250);
+  } else if (priceRange === '250to450') {
+    processed = processed.filter(item => item.cheapestPlatform.finalPrice > 250 && item.cheapestPlatform.finalPrice <= 450);
+  } else if (priceRange === 'above450') {
+    processed = processed.filter(item => item.cheapestPlatform.finalPrice > 450);
+  }
+
+  // Sorting logic
+  if (sortBy === 'cheapest') {
+    processed.sort((a, b) => a.cheapestPlatform.finalPrice - b.cheapestPlatform.finalPrice);
+  } else if (sortBy === 'rating') {
+    processed.sort((a, b) => b.rating - a.rating);
+  } else if (sortBy === 'deliveryTime') {
+    processed.sort((a, b) => parseInt(a.cheapestPlatform.deliveryTime) - parseInt(b.cheapestPlatform.deliveryTime));
+  } else if (sortBy === 'savings') {
+    processed.sort((a, b) => b.maxSavings - a.maxSavings);
+  }
+
+  return processed;
 };
 
 export const calculateTotalStats = (dishes) => {
