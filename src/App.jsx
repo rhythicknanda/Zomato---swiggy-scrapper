@@ -4,13 +4,17 @@ import { SearchBar } from './components/SearchBar';
 import { SavingsSummary } from './components/SavingsSummary';
 import { ComparisonCard } from './components/ComparisonCard';
 import { DishDetailModal } from './components/DishDetailModal';
+import { LocalitySelectorModal } from './components/LocalitySelectorModal';
 import { searchAndCompareDishes, calculateTotalStats } from './services/scraperService';
-import { UtensilsCrossed, RefreshCw, Sparkles, Building2 } from 'lucide-react';
+import { BENGALURU_LOCALITIES } from './data/dishesData';
+import { UtensilsCrossed, RefreshCw, MapPin } from 'lucide-react';
 
 export default function App() {
-  const [searchQuery, setSearchQuery] = useState('Butter Chicken');
+  const [searchQuery, setSearchQuery] = useState('Biryani');
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [selectedCity, setSelectedCity] = useState('Delhi NCR');
+  const [selectedLocality, setSelectedLocality] = useState(BENGALURU_LOCALITIES[1]); // Default: Koramangala
+  const [isLocalityModalOpen, setIsLocalityModalOpen] = useState(false);
+  
   const [selectedDish, setSelectedDish] = useState(null);
   const [sortBy, setSortBy] = useState('cheapest');
   const [priceRange, setPriceRange] = useState('all');
@@ -23,14 +27,14 @@ export default function App() {
 
   const triggerScrapeEffect = () => {
     setIsScraping(true);
-    setScrapingStep(`🔍 Scraping restaurants in ${selectedCity} serving "${searchQuery || 'Dishes'}"...`);
+    setScrapingStep(`🔍 Scraping Swiggy & Zomato in ${selectedLocality.name}, Bengaluru...`);
 
     setTimeout(() => {
-      setScrapingStep(`🍊 Extracting Swiggy & Zomato checkout prices + Packaging & Delivery fees...`);
+      setScrapingStep(`📍 Fetching exact store addresses & Swiggy/Zomato mobile app deep links...`);
     }, 400);
 
     setTimeout(() => {
-      setScrapingStep(`⚡ Applying active Gold/One coupons & calculating lowest price deals...`);
+      setScrapingStep(`⚡ Calculating packaging fees, delivery distance & Gold/One discounts...`);
     }, 800);
 
     setTimeout(() => {
@@ -45,12 +49,12 @@ export default function App() {
 
   useEffect(() => {
     triggerScrapeEffect();
-  }, [selectedCity, searchQuery, selectedCategory, sortBy, priceRange, isVegOnly, isNonVegOnly, isGoldMember]);
+  }, [selectedLocality, searchQuery, selectedCategory, sortBy, priceRange, isVegOnly, isNonVegOnly, isGoldMember]);
 
   const dishes = useMemo(() => {
     return searchAndCompareDishes({
       query: searchQuery,
-      selectedCityName: selectedCity,
+      selectedLocality,
       category: selectedCategory,
       isVegOnly,
       isNonVegOnly,
@@ -58,7 +62,7 @@ export default function App() {
       sortBy,
       priceRange
     });
-  }, [searchQuery, selectedCity, selectedCategory, isVegOnly, isNonVegOnly, isGoldMember, sortBy, priceRange]);
+  }, [searchQuery, selectedLocality, selectedCategory, isVegOnly, isNonVegOnly, isGoldMember, sortBy, priceRange]);
 
   const stats = useMemo(() => {
     return calculateTotalStats(dishes);
@@ -67,8 +71,8 @@ export default function App() {
   return (
     <div className="app-container">
       <Header
-        selectedCity={selectedCity}
-        setSelectedCity={setSelectedCity}
+        selectedLocality={selectedLocality}
+        onOpenLocalityModal={() => setIsLocalityModalOpen(true)}
         isGoldMember={isGoldMember}
         setIsGoldMember={setIsGoldMember}
       />
@@ -78,8 +82,8 @@ export default function App() {
         setSearchQuery={setSearchQuery}
         selectedCategory={selectedCategory}
         setSelectedCategory={setSelectedCategory}
-        selectedCity={selectedCity}
-        setSelectedCity={setSelectedCity}
+        selectedLocality={selectedLocality}
+        onOpenLocalityModal={() => setIsLocalityModalOpen(true)}
         sortBy={sortBy}
         setSortBy={setSortBy}
         isVegOnly={isVegOnly}
@@ -95,33 +99,33 @@ export default function App() {
       {/* Live Scraping Banner */}
       {isScraping && (
         <div style={{
-          background: 'linear-gradient(135deg, rgba(252, 128, 25, 0.15), rgba(226, 55, 68, 0.15))',
-          border: '1px solid rgba(252, 128, 25, 0.4)',
-          borderRadius: '16px',
-          padding: '1rem 1.5rem',
+          background: '#f8fafc',
+          border: '1px solid #cbd5e1',
+          borderRadius: '12px',
+          padding: '0.85rem 1.25rem',
           display: 'flex',
           alignItems: 'center',
-          gap: '1rem',
-          marginBottom: '1.5rem',
-          color: '#ffffff'
+          gap: '0.85rem',
+          marginBottom: '1.25rem',
+          color: '#0f172a'
         }}>
-          <RefreshCw className="spin" size={24} color="#fc8019" />
+          <RefreshCw className="spin" size={20} color="#fc8019" />
           <div>
-            <div style={{ fontWeight: 700, fontSize: '0.95rem' }}>Scraping Restaurant Listings for {selectedCity}...</div>
-            <div style={{ fontSize: '0.85rem', color: '#d1d5db' }}>{scrapingStep}</div>
+            <div style={{ fontWeight: 700, fontSize: '0.9rem' }}>Scraping Bengaluru Listings for {selectedLocality.name}...</div>
+            <div style={{ fontSize: '0.82rem', color: '#64748b' }}>{scrapingStep}</div>
           </div>
         </div>
       )}
 
-      {/* Results Header Count */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', color: '#9ca3af', fontSize: '0.9rem' }}>
+      {/* Area Context Banner */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', color: '#64748b', fontSize: '0.85rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <Building2 size={16} color="#fc8019" />
-          <span>Showing <strong>{dishes.length}</strong> restaurants in <strong>{selectedCity}</strong> providing <strong>"{searchQuery || 'Dishes'}"</strong></span>
+          <MapPin size={15} color="#fc8019" />
+          <span>Showing <strong>{dishes.length}</strong> restaurants near <strong>{selectedLocality.name}, Bengaluru</strong></span>
         </div>
 
         {isGoldMember && (
-          <span style={{ color: '#f59e0b', fontWeight: 600, fontSize: '0.82rem' }}>
+          <span style={{ color: '#d97706', fontWeight: 700, fontSize: '0.8rem' }}>
             👑 Gold/One Discounts Applied
           </span>
         )}
@@ -136,10 +140,10 @@ export default function App() {
           ))}
         </div>
       ) : (
-        <div style={{ textAlign: 'center', padding: '4rem 1rem', color: '#9ca3af' }}>
-          <UtensilsCrossed size={48} style={{ marginBottom: '1rem', opacity: 0.5 }} />
-          <h3 style={{ fontSize: '1.4rem', color: '#fff', marginBottom: '0.5rem' }}>No restaurants found matching your filters</h3>
-          <p>Try clearing filters or search for another dish like "Butter Chicken", "Biryani", "Pizza", or "Burger".</p>
+        <div style={{ textAlign: 'center', padding: '4rem 1rem', color: '#64748b' }}>
+          <UtensilsCrossed size={44} style={{ marginBottom: '1rem', opacity: 0.5 }} />
+          <h3 style={{ fontSize: '1.3rem', color: '#0f172a', marginBottom: '0.5rem' }}>No restaurants found matching filters in {selectedLocality.name}</h3>
+          <p>Try clearing your search or choose another Bengaluru area above.</p>
         </div>
       )}
 
@@ -147,9 +151,17 @@ export default function App() {
         <DishDetailModal dish={selectedDish} onClose={() => setSelectedDish(null)} />
       )}
 
-      <footer style={{ textAlign: 'center', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '2rem', paddingBottom: '2rem', marginTop: '4rem', color: '#6b7280', fontSize: '0.85rem' }}>
-        <p>BiteSaver — Multi-Restaurant Food Price Scraper Engine (Swiggy vs Zomato vs Ownly)</p>
-        <p style={{ marginTop: '0.5rem' }}>📍 Selected City: {selectedCity} • Ready for 1-Click Netlify Hosting</p>
+      {isLocalityModalOpen && (
+        <LocalitySelectorModal
+          selectedLocality={selectedLocality}
+          onSelectLocality={setSelectedLocality}
+          onClose={() => setIsLocalityModalOpen(false)}
+        />
+      )}
+
+      <footer style={{ textAlign: 'center', borderTop: '1px solid #e2e8f0', paddingTop: '1.75rem', paddingBottom: '1.75rem', marginTop: '3.5rem', color: '#64748b', fontSize: '0.82rem' }}>
+        <p>BiteSaver — Bengaluru Food Price Scraper Engine (Swiggy vs Zomato vs Ownly)</p>
+        <p style={{ marginTop: '0.4rem' }}>📍 Selected Locality: {selectedLocality.name}, Bengaluru • Mobile App Deep-Linking Active</p>
       </footer>
     </div>
   );

@@ -1,12 +1,12 @@
 import React from 'react';
-import { Star, ChevronRight, MapPin, Navigation, Tag } from 'lucide-react';
+import { Star, ChevronRight, MapPin, Navigation } from 'lucide-react';
+import { openPlatformAppOrWeb } from '../services/scraperService';
 
 export const ComparisonCard = ({ dish, onSelectDish }) => {
   return (
     <div className="dish-card">
       <div className="dish-header">
         <img src={dish.image} alt={dish.dishName} className="dish-image" loading="lazy" />
-        <div className="dish-overlay" />
         
         <span className={`dish-veg-badge ${dish.isVeg ? 'veg' : 'non-veg'}`}>
           {dish.isVeg ? 'Veg' : 'Non-Veg'}
@@ -15,13 +15,12 @@ export const ComparisonCard = ({ dish, onSelectDish }) => {
         <span
           style={{
             position: 'absolute',
-            top: '12px',
-            right: '12px',
-            background: 'rgba(0,0,0,0.7)',
-            backdropFilter: 'blur(8px)',
+            top: '10px',
+            right: '10px',
+            background: 'rgba(15,23,42,0.85)',
             color: '#fff',
-            fontSize: '0.75rem',
-            padding: '4px 8px',
+            fontSize: '0.72rem',
+            padding: '3px 8px',
             borderRadius: '6px',
             display: 'flex',
             alignItems: 'center',
@@ -29,28 +28,31 @@ export const ComparisonCard = ({ dish, onSelectDish }) => {
             fontWeight: '600'
           }}
         >
-          <MapPin size={12} color="#fc8019" /> {dish.locality || dish.cityName}
+          <MapPin size={12} color="#fc8019" /> {dish.locality}, Bengaluru
         </span>
       </div>
 
       <div className="dish-content">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.25rem' }}>
-          <h3 className="dish-name" style={{ fontSize: '1.25rem' }}>{dish.restaurant}</h3>
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px', background: '#1f293d', padding: '2px 8px', borderRadius: '6px', fontSize: '0.85rem', fontWeight: 700, color: '#f59e0b' }}>
-            <Star size={13} fill="#f59e0b" /> {dish.rating}
+          <h3 className="dish-name">{dish.restaurant}</h3>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px', background: '#f8fafc', border: '1px solid #e2e8f0', padding: '2px 6px', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 700, color: '#d97706' }}>
+            <Star size={13} fill="#f59e0b" color="#d97706" /> {dish.rating}
           </span>
         </div>
 
-        <div style={{ fontSize: '0.95rem', fontWeight: 600, color: '#34d399', marginBottom: '0.25rem' }}>
+        <div style={{ fontSize: '0.92rem', fontWeight: 700, color: '#16a34a', marginBottom: '0.25rem' }}>
           {dish.dishName}
         </div>
 
-        <div className="restaurant-name" style={{ marginBottom: '1.25rem', fontSize: '0.82rem' }}>
-          <Navigation size={12} color="#9ca3af" />
-          <span>{dish.locality}, {dish.cityName} ({dish.distanceKm} km away)</span>
+        {/* Address */}
+        <div className="restaurant-name" style={{ marginBottom: '1rem', fontSize: '0.78rem', color: '#64748b' }}>
+          <Navigation size={12} color="#64748b" style={{ flexShrink: 0 }} />
+          <span style={{ lineClamp: 2, WebkitLineClamp: 2, display: '-webkit-box', WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+            {dish.address}
+          </span>
         </div>
 
-        {/* Multi-Platform Price Comparison Bars */}
+        {/* Multi-Platform Price Rows */}
         <div className="platforms-comparison">
           {dish.sortedPlatforms.map((platform, idx) => {
             const isCheapest = idx === 0;
@@ -58,16 +60,24 @@ export const ComparisonCard = ({ dish, onSelectDish }) => {
             const diffWithExpensive = expensivePrice - platform.finalPrice;
 
             return (
-              <div key={platform.platform} className={`platform-row ${isCheapest ? 'cheapest' : ''}`}>
+              <div
+                key={platform.platform}
+                className={`platform-row ${isCheapest ? 'cheapest' : ''}`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openPlatformAppOrWeb(platform.platform, dish);
+                }}
+                style={{ cursor: 'pointer' }}
+              >
                 <div className="platform-brand">
                   <div className={`platform-logo ${platform.bgClass}`}>
                     {platform.name[0]}
                   </div>
                   <div>
                     <span style={{ fontWeight: 700 }}>{platform.name}</span>
-                    <div style={{ fontSize: '0.7rem', color: '#9ca3af' }}>{platform.deliveryTime}</div>
+                    <div style={{ fontSize: '0.7rem', color: '#64748b' }}>{platform.deliveryTime}</div>
                   </div>
-                  {isCheapest && <span className="cheapest-tag">Best Deal</span>}
+                  {isCheapest && <span className="cheapest-tag">Best Price</span>}
                 </div>
 
                 <div className="platform-price-box">
@@ -75,8 +85,8 @@ export const ComparisonCard = ({ dish, onSelectDish }) => {
                   {isCheapest && diffWithExpensive > 0 ? (
                     <div className="price-diff">Save ₹{diffWithExpensive}</div>
                   ) : (
-                    <div style={{ fontSize: '0.72rem', color: '#9ca3af' }}>
-                      Coupon: <span style={{ color: '#34d399', fontWeight: 600 }}>{platform.couponCode}</span>
+                    <div style={{ fontSize: '0.7rem', color: '#64748b' }}>
+                      Coupon: <span style={{ color: '#16a34a', fontWeight: 600 }}>{platform.couponCode}</span>
                     </div>
                   )}
                 </div>
@@ -86,8 +96,8 @@ export const ComparisonCard = ({ dish, onSelectDish }) => {
         </div>
 
         <button className="breakdown-btn" onClick={() => onSelectDish(dish)}>
-          <span>View Full Checkout Breakdown</span>
-          <ChevronRight size={16} />
+          <span>View Detailed Address & Checkout</span>
+          <ChevronRight size={15} />
         </button>
       </div>
     </div>

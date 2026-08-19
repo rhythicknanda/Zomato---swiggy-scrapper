@@ -1,69 +1,65 @@
 import React from 'react';
-import { MapPin, Crown, Sparkles } from 'lucide-react';
-import { POPULAR_CITIES } from '../data/dishesData';
+import { MapPin, Crown, ChevronDown } from 'lucide-react';
 
-export const Header = ({ selectedCity, setSelectedCity, isGoldMember, setIsGoldMember }) => {
+export const Header = ({ selectedLocality, onOpenLocalityModal, isGoldMember, setIsGoldMember }) => {
   return (
     <header className="site-header">
       <a href="#" className="brand-logo">
         <div className="logo-icon">🍔</div>
         <div>
           <div className="brand-name">BiteSaver</div>
-          <div className="brand-tagline">Swiggy vs Zomato vs Ownly Multi-Restaurant Scraper</div>
+          <div className="brand-tagline">Bengaluru Food Price Comparator</div>
         </div>
       </a>
 
       <div className="header-badges" style={{ flexWrap: 'wrap', gap: '0.75rem' }}>
+        {/* Bengaluru Locality Selector Trigger Button */}
+        <button
+          onClick={onOpenLocalityModal}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.4rem',
+            background: '#ffffff',
+            border: '1px solid #cbd5e1',
+            color: '#0f172a',
+            padding: '0.45rem 0.85rem',
+            borderRadius: '8px',
+            fontSize: '0.82rem',
+            fontWeight: '700',
+            cursor: 'pointer',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
+          }}
+        >
+          <MapPin size={15} color="#fc8019" />
+          <span>{selectedLocality.name}, Bengaluru</span>
+          <ChevronDown size={14} color="#64748b" />
+        </button>
+
         {/* Swiggy One / Zomato Gold Toggle */}
         <button
           onClick={() => setIsGoldMember(!isGoldMember)}
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '0.5rem',
-            background: isGoldMember ? 'linear-gradient(135deg, #f59e0b, #d97706)' : 'rgba(255,255,255,0.06)',
-            color: isGoldMember ? '#000000' : '#ffffff',
-            border: isGoldMember ? '1px solid #f59e0b' : '1px solid rgba(255,255,255,0.12)',
-            padding: '0.4rem 0.85rem',
-            borderRadius: '999px',
-            fontSize: '0.8rem',
+            gap: '0.4rem',
+            background: isGoldMember ? '#fef3c7' : '#ffffff',
+            color: isGoldMember ? '#92400e' : '#475569',
+            border: isGoldMember ? '1px solid #f59e0b' : '1px solid #cbd5e1',
+            padding: '0.45rem 0.85rem',
+            borderRadius: '8px',
+            fontSize: '0.82rem',
             fontWeight: '700',
-            cursor: 'pointer',
-            transition: 'all 0.2s ease',
-            boxShadow: isGoldMember ? '0 0 15px rgba(245, 158, 11, 0.4)' : 'none'
+            cursor: 'pointer'
           }}
         >
-          <Crown size={15} fill={isGoldMember ? '#000' : 'none'} color={isGoldMember ? '#000' : '#f59e0b'} />
-          <span>{isGoldMember ? 'Gold / One Membership Active' : 'Enable Gold/One Prices'}</span>
+          <Crown size={15} color="#f59e0b" fill={isGoldMember ? '#f59e0b' : 'none'} />
+          <span>{isGoldMember ? 'Gold/One Member Active' : 'Enable Gold/One Prices'}</span>
         </button>
-
-        {/* City Selector */}
-        <div className="city-selector-wrapper" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(255,255,255,0.06)', padding: '0.4rem 0.85rem', borderRadius: '999px', border: '1px solid rgba(255,255,255,0.12)' }}>
-          <MapPin size={16} color="#fc8019" />
-          <select
-            value={selectedCity}
-            onChange={(e) => setSelectedCity(e.target.value)}
-            style={{
-              background: 'transparent',
-              border: 'none',
-              color: '#ffffff',
-              fontSize: '0.85rem',
-              fontWeight: '600',
-              outline: 'none',
-              cursor: 'pointer'
-            }}
-          >
-            {POPULAR_CITIES.map((city) => (
-              <option key={city.id} value={city.name} style={{ background: '#111827', color: '#fff' }}>
-                📍 {city.name}
-              </option>
-            ))}
-          </select>
-        </div>
 
         <div className="live-badge">
           <span className="pulse-dot"></span>
-          <span>Live Multi-Scraper</span>
+          <span>Bengaluru Live</span>
         </div>
       </div>
     </header>
