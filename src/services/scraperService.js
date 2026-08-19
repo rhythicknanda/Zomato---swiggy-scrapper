@@ -147,7 +147,7 @@ const calculatePricing = (rawList, selectedLocality, isGoldMember) => {
 
     return {
       ...item,
-      id: `${item.restaurant.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${item.dishName.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${selectedLocality.id}`,
+      id: `${item.restaurant.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${item.dishName.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${item.locality.toLowerCase().replace(/[^a-z0-9]/g, '-')}`,
       calculatedDistance: distanceNum,
       cityName: "Bengaluru",
       sortedPlatforms: platforms,
@@ -158,8 +158,9 @@ const calculatePricing = (rawList, selectedLocality, isGoldMember) => {
 };
 
 /**
- * Universal Full-Fledged Scraper Engine
- * Guarantees zero dead ends for ANY dish, cuisine, or restaurant searched in Bengaluru.
+ * Universal Scraper Engine:
+ * Generates an extensive list of 25-30 restaurants in Bengaluru sorted by distance,
+ * ensuring the "Show More" button is ALWAYS active!
  */
 export const searchAndCompareDishesSplit = ({
   query = 'Pizza',
@@ -188,88 +189,45 @@ export const searchAndCompareDishesSplit = ({
     item.restaurant.toLowerCase().includes(trimmedQuery)
   );
 
-  // Section 2: Restaurants matching query in dishName or category (excluding name matched)
+  // Section 2: Restaurants matching query in dishName or category
   let menuMatched = db.filter(item =>
     !item.restaurant.toLowerCase().includes(trimmedQuery) &&
     (item.dishName.toLowerCase().includes(trimmedQuery) || item.category.toLowerCase().includes(trimmedQuery))
   );
 
-  // FULL-FLEDGED DYNAMIC FALLBACK: If query not pre-seeded, dynamically synthesize authentic Bengaluru listings!
-  if (nameMatched.length === 0 && menuMatched.length === 0 && trimmedQuery) {
-    const isNonVeg = trimmedQuery.includes('chicken') || trimmedQuery.includes('mutton') || trimmedQuery.includes('egg') || trimmedQuery.includes('fish') || trimmedQuery.includes('meat');
-    const formattedTitle = query.charAt(0).toUpperCase() + query.slice(1);
+  // EXPAND WITH BENGALURU BRANCHES TO GUARANTEE 25+ RESTAURANTS FOR DISTANCE PAGINATION
+  const formattedTitle = query.charAt(0).toUpperCase() + query.slice(1);
+  const isNonVeg = trimmedQuery.includes('chicken') || trimmedQuery.includes('mutton') || trimmedQuery.includes('egg');
 
-    nameMatched = [
-      {
-        dishName: `Special ${formattedTitle}`,
-        category: category !== 'All' ? category : 'Fast Food',
-        isVeg: !isNonVeg,
-        restaurant: `${formattedTitle} Express Bengaluru`,
-        locality: selectedLocality.name,
-        address: `100 Feet Rd, near Metro Station, ${selectedLocality.name}, Bengaluru, Karnataka 560038`,
-        rating: 4.6,
-        image: getBestImage(query),
-        description: `Authentic ${query} cooked with premium fresh ingredients in ${selectedLocality.name}.`,
-        basePrice: 320,
-        distanceKm: 0.9
-      },
-      {
-        dishName: `Royal ${formattedTitle} Combo`,
-        category: category !== 'All' ? category : 'Fast Food',
-        isVeg: !isNonVeg,
-        restaurant: `The ${formattedTitle} Club`,
-        locality: selectedLocality.name,
-        address: `80 Feet Rd, Block 4, ${selectedLocality.name}, Bengaluru, Karnataka 560095`,
-        rating: 4.5,
-        image: getBestImage(query),
-        description: `Gourmet ${query} prepared with signature house spices.`,
-        basePrice: 380,
-        distanceKm: 1.8
-      }
-    ];
+  // Generate branches across all Bengaluru localities so there are 25-30 restaurants gradually further away
+  const additionalBranches = BENGALURU_LOCALITIES.map((loc, idx) => {
+    const distanceVal = (0.8 + idx * 0.4).toFixed(1);
+    const isNameMatch = idx % 2 === 0;
 
-    menuMatched = [
-      {
-        dishName: `Signature ${formattedTitle}`,
-        category: category !== 'All' ? category : 'Main Course',
-        isVeg: !isNonVeg,
-        restaurant: `Empire Restaurant`,
-        locality: selectedLocality.name,
-        address: `80 Feet Rd, ${selectedLocality.name}, Bengaluru, Karnataka 560034`,
-        rating: 4.4,
-        image: getBestImage(query),
-        description: `Empire's famous signature ${query}.`,
-        basePrice: 290,
-        distanceKm: 1.4
-      },
-      {
-        dishName: `Chef Special ${formattedTitle}`,
-        category: category !== 'All' ? category : 'Main Course',
-        isVeg: !isNonVeg,
-        restaurant: `Truffles`,
-        locality: selectedLocality.name,
-        address: `5th Block, ${selectedLocality.name}, Bengaluru, Karnataka 560095`,
-        rating: 4.7,
-        image: getBestImage(query),
-        description: `Top rated ${query} at Truffles Bengaluru.`,
-        basePrice: 340,
-        distanceKm: 1.6
-      },
-      {
-        dishName: `Andhra Style ${formattedTitle}`,
-        category: category !== 'All' ? category : 'Main Course',
-        isVeg: !isNonVeg,
-        restaurant: `Nandhini Deluxe`,
-        locality: selectedLocality.name,
-        address: `100 Feet Rd, ${selectedLocality.name}, Bengaluru, Karnataka 560038`,
-        rating: 4.5,
-        image: getBestImage(query),
-        description: `Spicy authentic Andhra style ${query}.`,
-        basePrice: 280,
-        distanceKm: 2.2
-      }
-    ];
-  }
+    return {
+      dishName: `${formattedTitle} ${idx % 3 === 0 ? 'Special' : idx % 3 === 1 ? 'Supreme' : 'Delight'}`,
+      category: category !== 'All' ? category : (isNonVeg ? 'Main Course' : 'Fast Food'),
+      isVeg: !isNonVeg,
+      restaurant: isNameMatch ? `${formattedTitle} ${loc.name} Hub` : `Bengaluru ${formattedTitle} Kitchen (${loc.name})`,
+      locality: loc.name,
+      address: `Branch #${idx + 101}, Main Rd, ${loc.name}, Bengaluru, Karnataka 560${100 + idx}`,
+      rating: (4.2 + (idx % 8) * 0.1).toFixed(1),
+      image: getBestImage(query),
+      description: `Freshly prepared authentic ${query} served hot in ${loc.name}, Bengaluru.`,
+      basePrice: 220 + (idx % 5) * 40,
+      distanceKm: distanceVal,
+      isSyntheticBranch: isNameMatch
+    };
+  });
+
+  // Distribute synthetic branches into nameMatched and menuMatched
+  additionalBranches.forEach(branch => {
+    if (branch.isSyntheticBranch) {
+      nameMatched.push(branch);
+    } else {
+      menuMatched.push(branch);
+    }
+  });
 
   let processedNameMatched = calculatePricing(nameMatched, selectedLocality, isGoldMember);
   let processedMenuMatched = calculatePricing(menuMatched, selectedLocality, isGoldMember);
