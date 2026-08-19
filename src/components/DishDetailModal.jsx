@@ -13,16 +13,16 @@ export const DishDetailModal = ({ dish, onClose }) => {
         </button>
 
         <h2 className="modal-title">{dish.restaurant}</h2>
-        <p style={{ color: '#16a34a', fontSize: '1.05rem', fontWeight: 700, marginBottom: '0.5rem' }}>
+        <p style={{ color: '#4ade80', fontSize: '1.05rem', fontWeight: 800, marginBottom: '0.5rem' }}>
           {dish.dishName}
         </p>
 
         {/* Full Street Address */}
-        <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '0.75rem 1rem', borderRadius: '10px', fontSize: '0.85rem', color: '#334155', marginBottom: '1.25rem', display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
-          <MapPin size={18} color="#fc8019" style={{ flexShrink: 0, marginTop: '2px' }} />
+        <div style={{ background: '#1e293b', border: '1px solid #334155', padding: '0.75rem 1rem', borderRadius: '10px', fontSize: '0.85rem', color: '#cbd5e1', marginBottom: '1.25rem', display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
+          <MapPin size={18} color="#ff8200" style={{ flexShrink: 0, marginTop: '2px' }} />
           <div>
-            <strong style={{ color: '#0f172a' }}>Store Address:</strong> {dish.address}
-            <div style={{ color: '#64748b', fontSize: '0.78rem', marginTop: '2px' }}>
+            <strong style={{ color: '#ffffff' }}>Store Address:</strong> {dish.address}
+            <div style={{ color: '#94a3b8', fontSize: '0.78rem', marginTop: '2px' }}>
               Locality: {dish.locality}, Bengaluru ({dish.distanceKm} km distance)
             </div>
           </div>
@@ -46,9 +46,9 @@ export const DishDetailModal = ({ dish, onClose }) => {
               {dish.sortedPlatforms.map((p, idx) => {
                 const isCheapest = idx === 0;
                 return (
-                  <tr key={p.platform} style={isCheapest ? { backgroundColor: '#f0fdf4' } : {}}>
-                    <td style={{ fontWeight: 700 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <tr key={p.platform} style={isCheapest ? { backgroundColor: 'rgba(34, 197, 94, 0.15)' } : {}}>
+                    <td style={{ fontWeight: 800 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#ffffff' }}>
                         <span className={`platform-logo ${p.bgClass}`} style={{ width: '20px', height: '20px', fontSize: '0.7rem' }}>
                           {p.name[0]}
                         </span>
@@ -57,14 +57,14 @@ export const DishDetailModal = ({ dish, onClose }) => {
                     </td>
                     <td>₹{p.basePrice}</td>
                     <td>+₹{p.packagingFee}</td>
-                    <td>{p.deliveryFee === 0 ? <span style={{ color: '#16a34a', fontWeight: 700 }}>FREE</span> : `+₹${p.deliveryFee}`}</td>
+                    <td>{p.deliveryFee === 0 ? <span style={{ color: '#4ade80', fontWeight: 800 }}>FREE</span> : `+₹${p.deliveryFee}`}</td>
                     <td>+₹{p.platformFee}</td>
-                    <td style={{ color: '#16a34a', fontWeight: 600 }}>
-                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: '#f0fdf4', border: '1px solid #bbf7d0', padding: '2px 6px', borderRadius: '4px', fontSize: '0.75rem' }}>
+                    <td style={{ color: '#4ade80', fontWeight: 700 }}>
+                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: 'rgba(34, 197, 94, 0.15)', border: '1px solid rgba(34, 197, 94, 0.3)', padding: '2px 6px', borderRadius: '4px', fontSize: '0.75rem' }}>
                         <Ticket size={12} /> {p.couponCode} (-₹{p.discount})
                       </div>
                     </td>
-                    <td style={{ fontSize: '1.1rem', fontWeight: 800, color: isCheapest ? '#16a34a' : '#0f172a' }}>
+                    <td style={{ fontSize: '1.1rem', fontWeight: 800, color: isCheapest ? '#4ade80' : '#ffffff' }}>
                       ₹{p.finalPrice}
                     </td>
                     <td>
@@ -73,7 +73,7 @@ export const DishDetailModal = ({ dish, onClose }) => {
                         onClick={() => openPlatformAppOrWeb(p.platform, dish)}
                         className="order-link-btn"
                         style={{
-                          backgroundColor: p.platform === 'swiggy' ? '#fc8019' : p.platform === 'zomato' ? '#e23744' : '#0284c7',
+                          backgroundColor: p.platform === 'swiggy' ? '#ff8200' : p.platform === 'zomato' ? '#ef4444' : '#0284c7',
                           border: 'none',
                           cursor: 'pointer',
                           display: 'inline-flex',
@@ -91,7 +91,7 @@ export const DishDetailModal = ({ dish, onClose }) => {
           </table>
         </div>
 
-        <div style={{ marginTop: '1.25rem', background: '#f8fafc', padding: '0.85rem', borderRadius: '10px', fontSize: '0.82rem', color: '#64748b' }}>
+        <div style={{ marginTop: '1.25rem', background: '#1e293b', border: '1px solid #334155', padding: '0.85rem', borderRadius: '10px', fontSize: '0.82rem', color: '#cbd5e1' }}>
           📱 <strong>Mobile Deep-Link Active:</strong> Tapping "Open App" on your phone opens the exact <strong>{dish.restaurant}</strong> dish menu page directly inside the {dish.cheapestPlatform.name} app.
         </div>
       </div>

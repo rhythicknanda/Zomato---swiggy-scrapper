@@ -1,21 +1,21 @@
 :root {
-  --bg-page: #f8fafc;
-  --bg-card: #ffffff;
-  --bg-subtle: #f1f5f9;
-  --border-color: #e2e8f0;
-  --border-hover: #cbd5e1;
+  --bg-page: #0b0f17;
+  --bg-card: #151d2a;
+  --bg-subtle: #1e293b;
+  --border-color: #334155;
+  --border-hover: #475569;
   
-  --text-main: #0f172a;
-  --text-muted: #475569;
-  --text-light: #64748b;
+  --text-main: #ffffff;
+  --text-muted: #cbd5e1;
+  --text-light: #94a3b8;
 
-  --swiggy-orange: #fc8019;
-  --zomato-red: #e23744;
+  --swiggy-orange: #ff8200;
+  --zomato-red: #ef4444;
   --ownly-teal: #0284c7;
 
-  --green-deal: #16a34a;
-  --green-bg: #f0fdf4;
-  --green-border: #bbf7d0;
+  --green-deal: #22c55e;
+  --green-bg: rgba(34, 197, 94, 0.12);
+  --green-border: rgba(34, 197, 94, 0.35);
 
   --font-primary: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
 }
@@ -62,7 +62,7 @@ body {
 .logo-icon {
   width: 40px;
   height: 40px;
-  background: var(--text-main);
+  background: linear-gradient(135deg, var(--swiggy-orange), var(--zomato-red));
   color: #ffffff;
   border-radius: 10px;
   display: flex;
@@ -74,13 +74,13 @@ body {
 .brand-name {
   font-size: 1.4rem;
   font-weight: 800;
-  color: var(--text-main);
+  color: #ffffff;
   letter-spacing: -0.02em;
 }
 
 .brand-tagline {
   font-size: 0.8rem;
-  color: var(--text-light);
+  color: var(--text-muted);
   font-weight: 500;
 }
 
@@ -95,18 +95,18 @@ body {
   align-items: center;
   gap: 0.4rem;
   background: var(--green-bg);
-  color: var(--green-deal);
+  color: #4ade80;
   border: 1px solid var(--green-border);
   padding: 0.35rem 0.75rem;
   border-radius: 8px;
   font-size: 0.78rem;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .pulse-dot {
   width: 7px;
   height: 7px;
-  background-color: var(--green-deal);
+  background-color: #4ade80;
   border-radius: 50%;
 }
 
@@ -119,7 +119,7 @@ body {
 .hero-title {
   font-size: 2.2rem;
   font-weight: 800;
-  color: var(--text-main);
+  color: #ffffff;
   margin-bottom: 0.5rem;
   letter-spacing: -0.02em;
 }
@@ -153,16 +153,15 @@ body {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: 12px;
-  color: var(--text-main);
+  color: #ffffff;
   font-size: 1rem;
   font-family: var(--font-primary);
   outline: none;
   transition: border-color 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
 }
 
 .search-input:focus {
-  border-color: var(--text-main);
+  border-color: var(--swiggy-orange);
 }
 
 .search-icon {
@@ -177,7 +176,7 @@ body {
   right: 110px;
   background: transparent;
   border: none;
-  color: var(--text-light);
+  color: var(--text-muted);
   cursor: pointer;
   padding: 4px;
 }
@@ -198,15 +197,15 @@ body {
   padding: 0.45rem 0.85rem;
   border-radius: 8px;
   font-size: 0.82rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
 .chip-btn:hover, .chip-btn.active {
-  background: var(--text-main);
-  color: #ffffff;
-  border-color: var(--text-main);
+  background: #ffffff;
+  color: #0b0f17;
+  border-color: #ffffff;
 }
 
 /* Savings Banner */
@@ -240,8 +239,8 @@ body {
 
 .savings-title {
   font-size: 1.05rem;
-  font-weight: 700;
-  color: var(--text-main);
+  font-weight: 800;
+  color: #ffffff;
 }
 
 .savings-desc {
@@ -252,7 +251,7 @@ body {
 .savings-badge-amount {
   font-size: 1.4rem;
   font-weight: 800;
-  color: var(--green-deal);
+  color: #4ade80;
 }
 
 /* Grid Layout */
@@ -271,12 +270,11 @@ body {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.2s ease;
 }
 
 .dish-card:hover {
   border-color: var(--border-hover);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .dish-header {
@@ -303,7 +301,7 @@ body {
   padding: 3px 8px;
   border-radius: 4px;
   font-size: 0.7rem;
-  font-weight: 700;
+  font-weight: 800;
   text-transform: uppercase;
 }
 
@@ -326,13 +324,13 @@ body {
 
 .dish-name {
   font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--text-main);
+  font-weight: 800;
+  color: #ffffff;
 }
 
 .restaurant-name {
   font-size: 0.85rem;
-  color: var(--text-light);
+  color: var(--text-muted);
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
@@ -367,6 +365,7 @@ body {
   align-items: center;
   gap: 0.6rem;
   font-size: 0.9rem;
+  color: #ffffff;
 }
 
 .platform-logo {
@@ -392,17 +391,17 @@ body {
 .final-price {
   font-size: 1.05rem;
   font-weight: 800;
-  color: var(--text-main);
+  color: #ffffff;
 }
 
 .price-diff {
   font-size: 0.72rem;
-  color: var(--green-deal);
-  font-weight: 700;
+  color: #4ade80;
+  font-weight: 800;
 }
 
 .cheapest-tag {
-  background: var(--green-deal);
+  background: #16a34a;
   color: #ffffff;
   font-size: 0.62rem;
   font-weight: 800;
@@ -415,11 +414,11 @@ body {
 .breakdown-btn {
   width: 100%;
   padding: 0.65rem;
-  background: var(--bg-card);
+  background: var(--bg-subtle);
   border: 1px solid var(--border-color);
-  color: var(--text-main);
+  color: #ffffff;
   border-radius: 8px;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 0.85rem;
   cursor: pointer;
   margin-top: auto;
@@ -431,14 +430,14 @@ body {
 }
 
 .breakdown-btn:hover {
-  background: var(--bg-subtle);
+  background: #334155;
 }
 
 /* Modal */
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.6);
+  background: rgba(0, 0, 0, 0.75);
   z-index: 999;
   display: flex;
   align-items: center;
@@ -447,7 +446,7 @@ body {
 }
 
 .modal-card {
-  background: #ffffff;
+  background: #151d2a;
   border: 1px solid var(--border-color);
   border-radius: 16px;
   max-width: 650px;
@@ -455,9 +454,9 @@ body {
   max-height: 90vh;
   overflow-y: auto;
   padding: 1.75rem;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
   position: relative;
-  color: var(--text-main);
+  color: #ffffff;
 }
 
 .close-modal-btn {
@@ -479,6 +478,7 @@ body {
 .modal-title {
   font-size: 1.4rem;
   font-weight: 800;
+  color: #ffffff;
   margin-bottom: 0.25rem;
 }
 
@@ -496,13 +496,13 @@ body {
 
 .breakdown-table th {
   font-size: 0.78rem;
-  color: var(--text-light);
+  color: var(--text-muted);
   text-transform: uppercase;
 }
 
 .breakdown-table td {
   font-size: 0.88rem;
-  color: var(--text-main);
+  color: #ffffff;
 }
 
 .order-link-btn {

@@ -17,36 +17,36 @@ export const ComparisonCard = ({ dish, onSelectDish }) => {
             position: 'absolute',
             top: '10px',
             right: '10px',
-            background: 'rgba(15,23,42,0.85)',
-            color: '#fff',
+            background: 'rgba(11, 15, 23, 0.85)',
+            color: '#ffffff',
             fontSize: '0.72rem',
             padding: '3px 8px',
             borderRadius: '6px',
             display: 'flex',
             alignItems: 'center',
             gap: '4px',
-            fontWeight: '600'
+            fontWeight: '700'
           }}
         >
-          <MapPin size={12} color="#fc8019" /> {dish.locality}, Bengaluru
+          <MapPin size={12} color="#ff8200" /> {dish.locality}, Bengaluru
         </span>
       </div>
 
       <div className="dish-content">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.25rem' }}>
           <h3 className="dish-name">{dish.restaurant}</h3>
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px', background: '#f8fafc', border: '1px solid #e2e8f0', padding: '2px 6px', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 700, color: '#d97706' }}>
-            <Star size={13} fill="#f59e0b" color="#d97706" /> {dish.rating}
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px', background: '#1e293b', border: '1px solid #334155', padding: '2px 6px', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 800, color: '#f59e0b' }}>
+            <Star size={13} fill="#f59e0b" color="#f59e0b" /> {dish.rating}
           </span>
         </div>
 
-        <div style={{ fontSize: '0.92rem', fontWeight: 700, color: '#16a34a', marginBottom: '0.25rem' }}>
+        <div style={{ fontSize: '0.95rem', fontWeight: 800, color: '#4ade80', marginBottom: '0.25rem' }}>
           {dish.dishName}
         </div>
 
         {/* Address */}
-        <div className="restaurant-name" style={{ marginBottom: '1rem', fontSize: '0.78rem', color: '#64748b' }}>
-          <Navigation size={12} color="#64748b" style={{ flexShrink: 0 }} />
+        <div className="restaurant-name" style={{ marginBottom: '1rem', fontSize: '0.8rem', color: '#cbd5e1' }}>
+          <Navigation size={12} color="#cbd5e1" style={{ flexShrink: 0 }} />
           <span style={{ lineClamp: 2, WebkitLineClamp: 2, display: '-webkit-box', WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
             {dish.address}
           </span>
@@ -74,8 +74,8 @@ export const ComparisonCard = ({ dish, onSelectDish }) => {
                     {platform.name[0]}
                   </div>
                   <div>
-                    <span style={{ fontWeight: 700 }}>{platform.name}</span>
-                    <div style={{ fontSize: '0.7rem', color: '#64748b' }}>{platform.deliveryTime}</div>
+                    <span style={{ fontWeight: 800, color: '#ffffff' }}>{platform.name}</span>
+                    <div style={{ fontSize: '0.7rem', color: '#cbd5e1' }}>{platform.deliveryTime}</div>
                   </div>
                   {isCheapest && <span className="cheapest-tag">Best Price</span>}
                 </div>
@@ -85,8 +85,8 @@ export const ComparisonCard = ({ dish, onSelectDish }) => {
                   {isCheapest && diffWithExpensive > 0 ? (
                     <div className="price-diff">Save ₹{diffWithExpensive}</div>
                   ) : (
-                    <div style={{ fontSize: '0.7rem', color: '#64748b' }}>
-                      Coupon: <span style={{ color: '#16a34a', fontWeight: 600 }}>{platform.couponCode}</span>
+                    <div style={{ fontSize: '0.7rem', color: '#cbd5e1' }}>
+                      Coupon: <span style={{ color: '#4ade80', fontWeight: 700 }}>{platform.couponCode}</span>
                     </div>
                   )}
                 </div>

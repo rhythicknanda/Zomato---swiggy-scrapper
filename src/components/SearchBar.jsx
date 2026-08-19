@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, X, Sparkles, RefreshCw, ArrowUpDown, Filter, MapPin } from 'lucide-react';
+import { Search, X, Sparkles, RefreshCw, ArrowUpDown, Filter } from 'lucide-react';
 import { BENGALURU_LOCALITIES } from '../data/dishesData';
 
 export const SearchBar = ({
@@ -23,10 +23,10 @@ export const SearchBar = ({
   return (
     <div className="hero-section">
       <h1 className="hero-title">
-        Compare Food Prices in <span style={{ color: '#fc8019', textDecoration: 'underline' }}>{selectedLocality.name}, Bengaluru</span>
+        Compare Food Prices in <span style={{ color: '#ff8200', textDecoration: 'underline' }}>{selectedLocality.name}, Bengaluru</span>
       </h1>
       <p className="hero-subtitle">
-        Type any dish or restaurant below to compare exact prices across <strong>Swiggy</strong>, <strong>Zomato</strong> & <strong>Ownly</strong>.
+        Type any dish or restaurant below to compare exact checkout prices across <strong>Swiggy</strong>, <strong>Zomato</strong> & <strong>Ownly</strong>.
       </p>
 
       <div className="search-container">
@@ -50,12 +50,12 @@ export const SearchBar = ({
             style={{
               position: 'absolute',
               right: '6px',
-              background: 'linear-gradient(135deg, #fc8019, #e23744)',
+              background: 'linear-gradient(135deg, #ff8200, #ef4444)',
               border: 'none',
-              color: '#fff',
+              color: '#ffffff',
               padding: '0.65rem 1.15rem',
               borderRadius: '8px',
-              fontWeight: '700',
+              fontWeight: '800',
               fontSize: '0.88rem',
               cursor: 'pointer',
               display: 'flex',
@@ -70,7 +70,7 @@ export const SearchBar = ({
 
         {/* Bengaluru Locality Chips */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', marginTop: '0.85rem', flexWrap: 'wrap' }}>
-          <span style={{ fontSize: '0.78rem', color: '#64748b', fontWeight: 600 }}>Bengaluru Area:</span>
+          <span style={{ fontSize: '0.8rem', color: '#cbd5e1', fontWeight: 600 }}>Bengaluru Area:</span>
           {BENGALURU_LOCALITIES.slice(0, 5).map((loc) => (
             <button
               key={loc.id}
@@ -85,7 +85,7 @@ export const SearchBar = ({
           <button
             type="button"
             className="chip-btn"
-            style={{ fontSize: '0.75rem', padding: '0.3rem 0.65rem', color: '#fc8019', borderStyle: 'dashed' }}
+            style={{ fontSize: '0.75rem', padding: '0.3rem 0.65rem', color: '#ff8200', borderStyle: 'dashed', borderColor: '#ff8200' }}
             onClick={onOpenLocalityModal}
           >
             🔍 More Areas...
@@ -96,32 +96,32 @@ export const SearchBar = ({
         <div style={{ display: 'flex', gap: '0.65rem', marginTop: '1rem', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center' }}>
           
           {/* Sort Dropdown */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', background: '#ffffff', padding: '0.4rem 0.75rem', borderRadius: '8px', border: '1px solid #cbd5e1' }}>
-            <ArrowUpDown size={14} color="#64748b" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', background: '#151d2a', padding: '0.4rem 0.75rem', borderRadius: '8px', border: '1px solid #334155' }}>
+            <ArrowUpDown size={14} color="#94a3b8" />
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              style={{ background: 'transparent', border: 'none', color: '#0f172a', fontSize: '0.82rem', fontWeight: 600, outline: 'none', cursor: 'pointer' }}
+              style={{ background: 'transparent', border: 'none', color: '#ffffff', fontSize: '0.82rem', fontWeight: 700, outline: 'none', cursor: 'pointer' }}
             >
-              <option value="cheapest">🏷️ Sort: Cheapest First</option>
-              <option value="rating">⭐ Sort: Highest Rating</option>
-              <option value="deliveryTime">⚡ Sort: Fastest Delivery</option>
-              <option value="savings">💰 Sort: Max Savings</option>
+              <option value="cheapest" style={{ background: '#151d2a' }}>🏷️ Sort: Cheapest First</option>
+              <option value="rating" style={{ background: '#151d2a' }}>⭐ Sort: Highest Rating</option>
+              <option value="deliveryTime" style={{ background: '#151d2a' }}>⚡ Sort: Fastest Delivery</option>
+              <option value="savings" style={{ background: '#151d2a' }}>💰 Sort: Max Savings</option>
             </select>
           </div>
 
           {/* Price Range Filter */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', background: '#ffffff', padding: '0.4rem 0.75rem', borderRadius: '8px', border: '1px solid #cbd5e1' }}>
-            <Filter size={14} color="#64748b" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', background: '#151d2a', padding: '0.4rem 0.75rem', borderRadius: '8px', border: '1px solid #334155' }}>
+            <Filter size={14} color="#94a3b8" />
             <select
               value={priceRange}
               onChange={(e) => setPriceRange(e.target.value)}
-              style={{ background: 'transparent', border: 'none', color: '#0f172a', fontSize: '0.82rem', fontWeight: 600, outline: 'none', cursor: 'pointer' }}
+              style={{ background: 'transparent', border: 'none', color: '#ffffff', fontSize: '0.82rem', fontWeight: 700, outline: 'none', cursor: 'pointer' }}
             >
-              <option value="all">💵 Price: All</option>
-              <option value="under250">💵 Under ₹250</option>
-              <option value="250to450">💵 ₹250 – ₹450</option>
-              <option value="above450">💵 Above ₹450</option>
+              <option value="all" style={{ background: '#151d2a' }}>💵 Price: All</option>
+              <option value="under250" style={{ background: '#151d2a' }}>💵 Under ₹250</option>
+              <option value="250to450" style={{ background: '#151d2a' }}>💵 ₹250 – ₹450</option>
+              <option value="above450" style={{ background: '#151d2a' }}>💵 Above ₹450</option>
             </select>
           </div>
 
@@ -130,7 +130,7 @@ export const SearchBar = ({
             type="button"
             className={`chip-btn ${isVegOnly ? 'active' : ''}`}
             onClick={() => { setIsVegOnly(!isVegOnly); if (!isVegOnly) setIsNonVegOnly(false); }}
-            style={isVegOnly ? { background: '#f0fdf4', border: '1px solid #16a34a', color: '#16a34a' } : {}}
+            style={isVegOnly ? { background: 'rgba(34,197,94,0.2)', border: '1px solid #22c55e', color: '#4ade80' } : {}}
           >
             🟢 Veg
           </button>
@@ -139,7 +139,7 @@ export const SearchBar = ({
             type="button"
             className={`chip-btn ${isNonVegOnly ? 'active' : ''}`}
             onClick={() => { setIsNonVegOnly(!isNonVegOnly); if (!isNonVegOnly) setIsVegOnly(false); }}
-            style={isNonVegOnly ? { background: '#fef2f2', border: '1px solid #dc2626', color: '#dc2626' } : {}}
+            style={isNonVegOnly ? { background: 'rgba(239,68,68,0.2)', border: '1px solid #ef4444', color: '#f87171' } : {}}
           >
             🔴 Non-Veg
           </button>

@@ -18,11 +18,11 @@ export const LocalitySelectorModal = ({ selectedLocality, onSelectLocality, onCl
         </button>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '0.5rem' }}>
-          <MapPin size={22} color="#fc8019" />
+          <MapPin size={22} color="#ff8200" />
           <h2 className="modal-title" style={{ fontSize: '1.25rem' }}>Select Bengaluru Area</h2>
         </div>
         
-        <p style={{ fontSize: '0.85rem', color: '#64748b', marginBottom: '1.25rem' }}>
+        <p style={{ fontSize: '0.85rem', color: '#cbd5e1', marginBottom: '1.25rem' }}>
           Search or choose your neighborhood in Bengaluru to calculate accurate delivery distances & branch addresses.
         </p>
 
@@ -58,28 +58,28 @@ export const LocalitySelectorModal = ({ selectedLocality, onSelectLocality, onCl
                     justifyContent: 'space-between',
                     padding: '0.65rem 0.85rem',
                     borderRadius: '8px',
-                    border: isSelected ? '1px solid #fc8019' : '1px solid #e2e8f0',
-                    background: isSelected ? '#fff7ed' : '#ffffff',
+                    border: isSelected ? '1px solid #ff8200' : '1px solid #334155',
+                    background: isSelected ? 'rgba(255,130,0,0.15)' : '#1e293b',
                     cursor: 'pointer',
                     textAlign: 'left',
                     transition: 'all 0.15s ease'
                   }}
                 >
                   <div>
-                    <div style={{ fontWeight: 700, fontSize: '0.9rem', color: isSelected ? '#c2410c' : '#0f172a' }}>
+                    <div style={{ fontWeight: 800, fontSize: '0.9rem', color: isSelected ? '#ff8200' : '#ffffff' }}>
                       📍 {loc.name}
                     </div>
-                    <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
+                    <div style={{ fontSize: '0.75rem', color: '#cbd5e1' }}>
                       {loc.zone}
                     </div>
                   </div>
 
-                  {isSelected && <Check size={18} color="#fc8019" />}
+                  {isSelected && <Check size={18} color="#ff8200" />}
                 </button>
               );
             })
           ) : (
-            <div style={{ textTransform: 'center', textAlign: 'center', padding: '1.5rem', color: '#64748b', fontSize: '0.85rem' }}>
+            <div style={{ textTransform: 'center', textAlign: 'center', padding: '1.5rem', color: '#cbd5e1', fontSize: '0.85rem' }}>
               No Bengaluru area matching "{searchTerm}".
             </div>
           )}
